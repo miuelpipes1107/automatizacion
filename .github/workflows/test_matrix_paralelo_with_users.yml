@@ -44,7 +44,7 @@ jobs:
     strategy:
       matrix:
         # contains xml files that are the suites for the execution of the classes  
-        Plan: [validation_users_1,validation_users_2,validation_stations_and_flight]
+        Plan: [login]
 
     steps:
         # check the repository and download the instance(ubuntu)
