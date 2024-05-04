@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    
+    <!-- project model version -->
+    <modelVersion>4.0.0</modelVersion>
+    <!-- unique identifier of the group to which the project belongs -->
+    <groupId>com.mycompany</groupId>
+    <!-- unique identifier of the artifact (project) in the group -->
+    <artifactId>automation</artifactId>
+    <!-- the artifact version -->
+    <version>50</version>
+    <!-- type of packaging used for the project -->
+    <packaging>jar</packaging>
+    <!-- project's name -->
+    <name>testing_integracion</name>
+    
+    <!-- specific versions of each dependency to be used in the project -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <aspectj.version>1.9.19</aspectj.version>
+        <testng.version>7.4.0</testng.version>
+        <selenium.version>3.5.3</selenium.version>
+        <allure.version>2.22.1</allure.version>
+        <rest-assured.version>5.3.0</rest-assured.version>
+        <assertj.version>3.24.2</assertj.version>
+        <monte.version>0.7.7.0</monte.version>
+        <hamcrest.version>1.3</hamcrest.version>
+        <commons-collections.version>3.2.2</commons-collections.version>
+        <commons-io.version>2.11.0</commons-io.version>
+        <slf4j.version>2.0.7</slf4j.version>
+        <webdrivermanager.version>5.3.2</webdrivermanager.version>
+        <surefire.version>3.1.0</surefire.version>
+        <dotenv.version>3.0.0</dotenv.version>
+    </properties>
+
+    <dependencies>
+        <!-- Tools and libraries for web browser automation. -->        
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>${selenium.version}</version>
+        </dependency>
+        <!-- Testing framework. -->
+        <!-- provides advanced features for writing, organizing, and run tests 
+        between flexible annotations, test bundling, support for parallelism, 
+        flexible configurations, and support for reports. -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+        </dependency>
+        <!-- Screen recording. -->
+        <!--allows you to record the screen of the application during tests -->
+        <dependency>
+            <groupId>com.github.stephenc.monte</groupId>
+            <artifactId>monte-screen-recorder</artifactId>
+            <version>${monte.version}</version>
+        </dependency>
+        <!-- Allure report. -->
+        <!-- tool for generating reports and displaying test results with 
+        statistics and graphs for analysis and identification of problems. -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-testng</artifactId>
+            <version>${allure.version}</version>
+        </dependency>
+        <!-- WebDriverManager for managing WebDriver binaries. -->
+        <!-- allows you to automate the download, installation, and configuration 
+        of web browser drivers (such as ChromeDriver or GeckoDriver) needed to 
+        run automated tests. -->
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>${webdrivermanager.version}</version>
+        </dependency>
+        <!-- allows you to load and access environment variables defined in 
+        ".env" files. -->
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>dotenv-java</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+        
+        <!-- Stream, filter (enables functional programming). -->
+        <!-- allows the use of input/output (I/O) utilities in Java and Provides
+        a number of useful functions and methods for manipulating files, reading
+        and writing data, managing directories. -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
+        <!-- Assertions for tests. -->
+        <!-- provides more expressive and readable assertions in Java unit tests,
+        improves syntax, and provides clear error messages for easier debugging 
+        and troubleshooting in tests. -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+        </dependency>            
+        <!-- HTTP client for connecting with Slack. -->
+        <!-- It allows you to make HTTP requests, send and receive responses, 
+        and perform validations on the received data. -->
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>${rest-assured.version}</version>
+        </dependency>
+        <!-- enables clearer and more expressive assertions in unit tests -->
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <version>${hamcrest.version}</version>
+        </dependency>
+        <!-- Implementation of multi-value HashMap. -->
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>${commons-collections.version}</version>
+        </dependency>
+        <!-- Outputs all events to System.err. Only messages of level INFO and 
+        higher are printed. -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>           
+    </dependencies>
+
+    <!-- Build segment for executing local tests. -->
+    <build>
+        <plugins>
+            <!-- allows you to ignore bugs in tests and use AspectJ to instrument
+            and manipulate code using aspects in Java at runtime. -->
+            <plugin>                
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.version}</version>
+                <configuration>
+                    <testFailureIgnore>true</testFailureIgnore>
+                    <argLine>
+                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                    </argLine>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjweaver</artifactId>
+                        <version>${aspectj.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+</project>

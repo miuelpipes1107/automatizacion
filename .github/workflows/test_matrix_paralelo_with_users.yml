@@ -1,0 +1,66 @@
+# The name of the workflow
+name: automation
+
+# Events that trigger the execution of the workflow
+on:
+  push:
+    # Allows you to specify the branches on which the workflow will be triggered
+    branches:
+      # Branch Name  
+      - 'master'
+      
+# Define the environment variables used in the workflow
+env:
+  ROUTE: src/test/java/suites
+  NAME_SPACE: "_"
+
+# Define the jobs that will be executed in the workflow
+jobs:
+
+  job1:
+    # Name of the job  
+    name: Requeriments
+    # Configure the workflow to run on an instance
+    runs-on: ubuntu-latest
+    # List of Steps to be executed in the job
+    steps:
+        # Runs a single command using the runners shell
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+  job2:
+    # Indicates the execution and completion of the job or jobs to start  
+    needs: job1
+    name: Matrix1
+    # Configure the workflow to run on an instance
+    runs-on: ubuntu-latest
+    
+    # allows you to configure a docker container for the job
+    container:
+      image: mavster/ubuntu:20.04-ff51-mvn
+      options: --user 0
+    
+    # "matrix" strategy to generate multiple job execution instances  
+    strategy:
+      matrix:
+        # contains xml files that are the suites for the execution of the classes  
+        Plan: [validation_users_1,validation_users_2,validation_stations_and_flight]
+
+    steps:
+        # check the repository and download the instance(ubuntu)
+      - name: check our repository and download it to our instance
+        uses: actions/checkout@v3
+        
+        # Runs a single command using the runners shell
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Compile and package our project
+        run: |
+          export DISPLAY=:99
+          Xvfb $DISPLAY -screen 0 1920x1080x16 -ac &
+          export DISPLAY=:99
+          export NSS_USE_SHARED_DB=ENABLED
+          export $(dbus-launch)
+          export NSS_USE_SHARED_DB=ENABLED
+          mvn -Dmaven.test.failure.ignore=true test -Dsurefire.suiteXmlFiles=$ROUTE/${{ matrix.Plan }}.xml | tee test_results.txt

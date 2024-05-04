@@ -1,0 +1,2 @@
+run allure serve
+
