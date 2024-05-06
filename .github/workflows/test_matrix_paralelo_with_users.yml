@@ -68,8 +68,8 @@ jobs:
       - name: "Import results to Xray"
         uses: mikepenz/xray-action@v1.0.0
         with:
-          username: ${{ secrets.XRAY_CLIENT_ID }}
-          password: ${{ secrets.XRAY_CLIENT_SECRET }}
+          username: "miuelpipes1107@gmail.com"
+          password: "Sasha8109@"
           testFormat: "junit"
           testPaths: "**/test/*.xml"
           testExecKey: "AUT"
