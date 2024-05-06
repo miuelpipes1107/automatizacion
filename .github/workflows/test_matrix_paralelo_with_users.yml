@@ -51,7 +51,7 @@ jobs:
       - name: check our repository and download it to our instance
         uses: actions/checkout@v3
         
-        # Runs a single command using the runners shel
+        # Runs a single command using the runners she
       - name: Checkout code
         uses: actions/checkout@v2
 
