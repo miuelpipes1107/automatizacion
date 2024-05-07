@@ -65,17 +65,27 @@ jobs:
           export NSS_USE_SHARED_DB=ENABLED
           mvn -Dmaven.test.failure.ignore=true test -Dsurefire.suiteXmlFiles=$ROUTE/${{ matrix.Plan }}.xml | tee test_results.txt
           
-      - name: "Import results to Xray (cloud) using a GH action"
-        if: ${{ false }}
-        uses: mikepenz/xray-action@v2.3.0
+#      - name: "Import results to Xray (cloud) using a GH action"
+#        if: ${{ false }}
+#        uses: mikepenz/xray-action@v2.3.0
+#        with:
+#           username: "687D7A60E34D4FF5AEF1FBF7CBC4B8EA"
+#           password: "cd8d864267f5bd255dfd535afc5075dccc7a56c9cb86e8bc8563ca34e5480732"
+#           xrayCloud: "true"
+#           testFormat: "testng"
+#           testPaths: "**/reports/*.xml"
+#           testPlanKey: "AUT-3"
+#           projectKey: "AUT"
+           
+      - name: "Import results to Xray"
+        uses: mikepenz/xray-action@v1.0.0
         with:
-           username: "687D7A60E34D4FF5AEF1FBF7CBC4B8EA"
-           password: "cd8d864267f5bd255dfd535afc5075dccc7a56c9cb86e8bc8563ca34e5480732"
-           xrayCloud: "true"
-           testFormat: "testng"
-           testPaths: "**/reports/*.xml"
-           testPlanKey: "AUT-3"
-           projectKey: "AUT"
+          username: "687D7A60E34D4FF5AEF1FBF7CBC4B8EA"
+          password: "cd8d864267f5bd255dfd535afc5075dccc7a56c9cb86e8bc8563ca34e5480732"
+          testFormat: "junit"
+          testPaths: "**/test/*.xml"
+          testExecKey: "AUT-3"
+          projectKey: "AUT"     
           
 #      - name: Publish cucumber execution result
 #        id: publish-cucumber-result
