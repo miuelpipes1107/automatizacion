@@ -68,8 +68,8 @@ jobs:
       - name: "Import results to Xray (cloud) using a GH action"        
         uses: mikepenz/xray-action@v1.0.0
         with:
-           username: "687D7A60E34D4FF5AEF1FBF7CBC4B8EA"
-           password: "cd8d864267f5bd255dfd535afc5075dccc7a56c9cb86e8bc8563ca34e5480732"
+           username: "miuelpipes1107@gmail.com"
+           password: "Sasha8109@"
            xrayCloud: "true"
            testFormat: "testng"
            testPaths: "**/reports/*.xml"
