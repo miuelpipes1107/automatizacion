@@ -29,7 +29,7 @@ jobs:
         uses: actions/checkout@v2
         
   job2:
-    # Indicates the execution and completion of the job or jobs to start  
+    # Indicates the execution and completion of the job or jobs to star  
     needs: job1
     name: Matrix1
     # Configure the workflow to run on an instance
