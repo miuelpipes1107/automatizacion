@@ -5,9 +5,21 @@ name: automation
 on:
   push:
     # Allows you to specify the branches on which the workflow will be triggered
-    branches:
-      # Branch Name  
-      - 'master'
+    branches:[ master ]
+  pull_request:  
+    branches:[ master ]
+  workflow_dispatch:
+    inputs:
+      testExecKey:
+        description: 'Test Exec ID from Xray'
+        default: ''
+        required: true
+        type: string
+      projectKey:
+        description: 'Project ID from Xray'
+        default: ''
+        required: true
+        type: string
       
 # Define the environment variables used in the workflow
 env:
