@@ -20,7 +20,7 @@ jobs:
   job1:
     # Name of the job  
     name: Requeriments
-    # Configure the workflow to run on an instance
+    # Configure the workflow to run on an instanc
     runs-on: ubuntu-latest
     # List of Steps to be executed in the job
     steps:
