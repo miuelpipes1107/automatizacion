@@ -5,9 +5,9 @@ name: automation
 on:
   push:
     # Allows you to specify the branches on which the workflow will be triggered
-    branches:[ master ]
+    branches: [ master ]
   pull_request:  
-    branches:[ master ]
+    branches: [ master ]
   workflow_dispatch:
     inputs:
       testExecKey:
