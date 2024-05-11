@@ -68,6 +68,13 @@ public class custom_screen_recorder extends ScreenRecorder
     movieFolder = new File(configuration_server.PATCH_VIDEO + this.class_file_name);
 
     movieFolder.mkdirs();
+    
+    File xray = new File(configuration_server.PATCH_XRAY);
+    
+    if (!xray.exists())
+    {
+      xray.mkdirs();
+    }
 
     String name_file = this.file_name + "." + Registry.getInstance().getExtension(new Format(MediaTypeKey, FormatKeys.MediaType.FILE, MimeTypeKey, MIME_AVI));
     String path_file = movieFolder.getAbsolutePath() + File.separator + name_file;
@@ -209,9 +216,9 @@ public class custom_screen_recorder extends ScreenRecorder
       source_file = new File(configuration_server.SOURCE_FILES);
       file_destination_bat = new File(configuration_server.PATCH_VIDEO + "/Report_html");
       new_file_destination = new File(file_destination_bat + "/allure-results/");      
-      
+      new_file_destination_xray= new File(configuration_server.PATCH_XRAY);
 
-      if (new_file_destination != null && source_file != null)
+      if (new_file_destination != null && source_file != null && new_file_destination_xray !=null)
       {
 
         movieFolder = new_file_destination;
@@ -224,7 +231,8 @@ public class custom_screen_recorder extends ScreenRecorder
         for (String f : source_file.list())
         {
           ////Copy files from source directory to destination.
-          copy(new File(source_file, f), new File(new_file_destination, f));          
+          copy(new File(source_file, f), new File(new_file_destination, f));
+          copy(new File(source_file, f), new File(new_file_destination_xray, f));
         }
 
         FileUtils.deleteDirectory(source_file);
