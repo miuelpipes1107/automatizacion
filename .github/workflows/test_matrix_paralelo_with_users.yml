@@ -76,6 +76,10 @@ jobs:
           export $(dbus-launch)
           export NSS_USE_SHARED_DB=ENABLED
           mvn -Dmaven.test.failure.ignore=true test -Dsurefire.suiteXmlFiles=$ROUTE/${{ matrix.Plan }}.xml | tee test_results.txt
+      
+      - name: Listar archivos en el directorio 'aws/'
+        run: |
+          ls -la xray/
           
       - name: "Import results to Xray"
         uses: mikepenz/xray-action@v3.0.4
