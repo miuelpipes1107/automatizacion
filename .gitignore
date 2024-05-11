@@ -5,9 +5,7 @@ target/
 .allure/
 allure-results/
 execution_of_cases/
-aws/
 videos_automatizacion/
 src/test/java/ink_testing_source/core/pnl_adl_passenger/
 ink_aviation.iml
 number_flight_corrupt.txt
-xray/
