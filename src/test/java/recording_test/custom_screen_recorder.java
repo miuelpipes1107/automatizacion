@@ -208,8 +208,7 @@ public class custom_screen_recorder extends ScreenRecorder
       }
       source_file = new File(configuration_server.SOURCE_FILES);
       file_destination_bat = new File(configuration_server.PATCH_VIDEO + "/Report_html");
-      new_file_destination = new File(file_destination_bat + "/allure-results/");
-      new_file_destination_xray = new File(configuration_server.PATCH_AWS);
+      new_file_destination = new File(file_destination_bat + "/allure-results/");      
       
 
       if (new_file_destination != null && source_file != null)
@@ -225,10 +224,7 @@ public class custom_screen_recorder extends ScreenRecorder
         for (String f : source_file.list())
         {
           ////Copy files from source directory to destination.
-          copy(new File(source_file, f), new File(new_file_destination, f));
-          
-          copy(new File(source_file, f), new File(new_file_destination_xray, f));
-          
+          copy(new File(source_file, f), new File(new_file_destination, f));          
         }
 
         FileUtils.deleteDirectory(source_file);
