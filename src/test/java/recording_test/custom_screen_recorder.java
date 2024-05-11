@@ -194,6 +194,7 @@ public class custom_screen_recorder extends ScreenRecorder
     File source_file_bat;
     File file_destination_bat;
     File new_file_destination;
+    File new_file_destination_xray;
 
     try
     {
@@ -208,8 +209,10 @@ public class custom_screen_recorder extends ScreenRecorder
       source_file = new File(configuration_server.SOURCE_FILES);
       file_destination_bat = new File(configuration_server.PATCH_VIDEO + "/Report_html");
       new_file_destination = new File(file_destination_bat + "/allure-results/");
+      new_file_destination_xray = new File(configuration_server.PATCH_XRAY);
+      
 
-      if (new_file_destination != null && source_file != null)
+      if (new_file_destination != null && source_file != null && new_file_destination_xray!=null)
       {
 
         movieFolder = new_file_destination;
@@ -223,6 +226,9 @@ public class custom_screen_recorder extends ScreenRecorder
         {
           ////Copy files from source directory to destination.
           copy(new File(source_file, f), new File(new_file_destination, f));
+          
+          copy(new File(source_file, f), new File(new_file_destination_xray, f));
+          
         }
 
         FileUtils.deleteDirectory(source_file);

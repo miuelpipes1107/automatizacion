@@ -29,12 +29,20 @@ public class zipper
   public zipper(File zip) throws FileNotFoundException
   {
     File aws = new File(configuration_server.PATCH_AWS);
+    File xray = new File(configuration_server.PATCH_XRAY);
+    
     if (!aws.exists())
     {
       aws.mkdirs();
     }
+    
+    if (!xray.exists())
+    {
+      xray.mkdirs();
+    }
+    
     this.output = new ZipOutputStream(new FileOutputStream(zip));
-  }
+  }  
 
   /**
    * Compresses a file into a ZIP archive.

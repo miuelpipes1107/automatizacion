@@ -62,6 +62,8 @@ public class configuration_server
                                                                                   + "/execution_of_cases/";
   public static final String PATCH_AWS                                          = SystemUtils.IS_OS_LINUX ? "aws/" : System.getProperty("user.dir") + "/aws/";
   
+  public static final String PATCH_XRAY                                         = SystemUtils.IS_OS_LINUX ? "xray/" : System.getProperty("user.dir") + "/xray/";
+  
   //// ======================== browser  =======================================    
   /**
    * Variables that identify the web browsers.

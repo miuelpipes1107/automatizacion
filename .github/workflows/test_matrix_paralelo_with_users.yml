@@ -83,6 +83,9 @@ jobs:
           username: "687D7A60E34D4FF5AEF1FBF7CBC4B8EA"
           password: "cd8d864267f5bd255dfd535afc5075dccc7a56c9cb86e8bc8563ca34e5480732"
           testFormat: "junit"
-          testPaths: "**/target/surefire-reports/*.xml"
+          testPaths: "**/xray/*.json"
           testExecKey: "A3-4"
           projectKey: "A3"
+          
+          
+#          testPaths: "**/target/surefire-reports/*.xml"
