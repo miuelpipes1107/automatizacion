@@ -79,7 +79,7 @@ jobs:
       
       - name: Listar archivos en el directorio 'aws/'
         run: |
-          ls -la aws/
+          ls -la xray/
           
       - name: "Import results to Xray"
         uses: mikepenz/xray-action@v3.0.4
