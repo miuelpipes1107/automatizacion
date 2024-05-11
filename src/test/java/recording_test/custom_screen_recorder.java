@@ -212,7 +212,7 @@ public class custom_screen_recorder extends ScreenRecorder
       new_file_destination_xray = new File(configuration_server.PATCH_XRAY);
       
 
-      if (new_file_destination != null && source_file != null && new_file_destination_xray!=null)
+      if (new_file_destination != null && source_file != null)
       {
 
         movieFolder = new_file_destination;
@@ -227,7 +227,7 @@ public class custom_screen_recorder extends ScreenRecorder
           ////Copy files from source directory to destination.
           copy(new File(source_file, f), new File(new_file_destination, f));
           
-          copy(new File(source_file, f), new File(new_file_destination_xray, f));
+//          copy(new File(source_file, f), new File(new_file_destination_xray, f));
           
         }
 
