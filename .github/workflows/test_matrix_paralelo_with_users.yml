@@ -88,8 +88,8 @@ jobs:
           password: "cd8d864267f5bd255dfd535afc5075dccc7a56c9cb86e8bc8563ca34e5480732"
           testFormat: "junit"
           testPaths: "**/target/surefire-reports/*.xml"
-          testExecKey: "A4-1"
-          projectKey: "A4"
+          testExecKey: "A3-13"
+          projectKey: "A3"
           
           
 #          testPaths: "**/target/surefire-reports/*.xml"
