@@ -1,5 +1,5 @@
 # The name of the workflow
-name: automation
+name: automation_pnl
 
 # Events that trigger the execution of the workflow
 on:
