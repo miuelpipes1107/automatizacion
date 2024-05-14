@@ -5,9 +5,9 @@ name: automation
 on:
   push:
     # Allows you to specify the branches on which the workflow will be triggered
-    branches: [ master ]
+    branches: [ pnl ]
   pull_request:  
-    branches: [ master ]
+    branches: [ pnl ]
   workflow_dispatch:
     inputs:
       testExecKey:
@@ -56,7 +56,7 @@ jobs:
     strategy:
       matrix:
         # contains xml files that are the suites for the execution of the classes  
-        Plan: [login]
+        Plan: [pnl]
 
     steps:
         # check the repository and download the instance(ubuntu)
