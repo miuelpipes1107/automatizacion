@@ -56,7 +56,7 @@ jobs:
     strategy:
       matrix:
         # contains xml files that are the suites for the execution of the classes  
-        Plan: [details]
+        Plan: [pnl]
 
     steps:
         # check the repository and download the instance(ubuntu)
