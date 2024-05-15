@@ -1,13 +1,13 @@
 # The name of the workflow
-name: automation_pnl
+name: automation_details
 
 # Events that trigger the execution of the workflow
 on:
   push:
     # Allows you to specify the branches on which the workflow will be triggered
-    branches: [ pnl ]
+    branches: [ details ]
   pull_request:  
-    branches: [ pnl ]
+    branches: [ details ]
   workflow_dispatch:
     inputs:
       testExecKey:
@@ -88,7 +88,7 @@ jobs:
           password: "cd8d864267f5bd255dfd535afc5075dccc7a56c9cb86e8bc8563ca34e5480732"
           testFormat: "junit"
           testPaths: "**/target/surefire-reports/*.xml"
-          testExecKey: "A3-32"
+          testExecKey: "A3-33"
           projectKey: "A3"
           
           

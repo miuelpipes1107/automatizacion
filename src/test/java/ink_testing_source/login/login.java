@@ -29,13 +29,13 @@ public class login extends method_after_before {
   }
     
   @Test
-  public static void t01_open_browser() throws MalformedURLException
+  public static void t01_open_browser_login() throws MalformedURLException
   {
     browser_manager.open_browser();    
   }
   
   @Test
-  public static void t02_enter_data() throws MalformedURLException
+  public static void t02_enter_data_login() throws MalformedURLException
   {      
      Wait = new WebDriverWait(browser_manager.web_driver_instace, 10);
      browser_manager.web_driver_instace.findElement(user).sendKeys("usuario");

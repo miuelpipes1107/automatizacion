@@ -56,7 +56,7 @@ jobs:
     strategy:
       matrix:
         # contains xml files that are the suites for the execution of the classes  
-        Plan: [login,details]
+        Plan: [login]
 
     steps:
         # check the repository and download the instance(ubuntu)
@@ -88,7 +88,7 @@ jobs:
           password: "cd8d864267f5bd255dfd535afc5075dccc7a56c9cb86e8bc8563ca34e5480732"
           testFormat: "junit"
           testPaths: "**/target/surefire-reports/*.xml"
-          testExecKey: ${{ matrix.Plan == 'login' && 'A3-13' || matrix.Plan == 'details' && 'A3-30' }}
+          testExecKey: "A3-31"
           projectKey: "A3"
           
           

@@ -29,7 +29,7 @@ public class pnl extends method_after_before {
   }
     
   @Test
-  public static void t01_open_browser() throws MalformedURLException
+  public static void t01_open_browser_pnl() throws MalformedURLException
   {
     browser_manager.open_browser();    
   }
