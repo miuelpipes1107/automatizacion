@@ -8,6 +8,7 @@ and the test includes one class-->
     <test name="pnl">
         <classes>             
             <class name="ink_testing_source.pnl.pnl"/>
+            <class name="ink_testing_source.pnl.pnl2"/>
         </classes> 
     </test>
 </suite>
