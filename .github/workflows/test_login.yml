@@ -69,11 +69,11 @@ jobs:
         
       - name: Imprimir testExecKey
         run: |
-        echo "testExecKey: ${{ github.event.inputs.testExecKey }}"
+         echo "testExecKey: ${{ github.event.inputs.testExecKey }}"
         
       - name: Imprimir projectKey
         run: |
-        echo "projectKey: ${{ github.event.inputs.projectKey }}"  
+         echo "projectKey: ${{ github.event.inputs.projectKey }}"  
 
       - name: Compile and package our project
         run: |
