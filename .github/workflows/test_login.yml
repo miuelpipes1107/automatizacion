@@ -96,8 +96,8 @@ jobs:
           password: "cd8d864267f5bd255dfd535afc5075dccc7a56c9cb86e8bc8563ca34e5480732"
           testFormat: "junit"
           testPaths: "**/target/surefire-reports/*.xml"
-          testExecKey: "A3-31"
-          projectKey: "A3"
+          testExecKey: ${{ github.event.inputs.testExecKey }}
+          projectKey: ${{ github.event.inputs.projectKey }}
           
           
 #          testPaths: "**/target/surefire-reports/*.xml"
