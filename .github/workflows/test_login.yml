@@ -66,6 +66,10 @@ jobs:
         # Runs a single command using the runners sh
       - name: Checkout code
         uses: actions/checkout@v2
+        
+      - name: Imprimir testExecKey
+        run: |
+        echo "Test Exec Key: ${{ github.event.inputs.testExecKey }}"  
 
       - name: Compile and package our project
         run: |
