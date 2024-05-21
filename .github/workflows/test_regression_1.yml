@@ -1,0 +1,92 @@
+name: automation_regression
+
+on:
+  workflow_dispatch:
+    inputs:
+      testExecKey:
+        description: 'Test Exec ID from Xray'
+        default: ''
+        required: true
+        type: string
+      projectKey:
+        description: 'Project ID from Xray'
+        default: ''
+        required: true
+        type: string
+
+env:
+  ROUTE: src/test/java/suites
+  NAME_SPACE: "_"
+
+jobs:
+  job1:
+    name: Requirements
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+  job2:
+    needs: job1
+    name: Matrix1
+    runs-on: ubuntu-latest
+    container:
+      image: mavster/ubuntu:20.04-ff51-mvn
+      options: --user 0
+
+    strategy:
+      matrix:
+        Plan: [login, details, pnl]
+        testExecKey: [null]
+
+    steps:
+      - name: Setup testExecKey
+        id: setup-test-exec-key
+        shell: bash
+        env:
+          TEST_EXEC_KEYS: ${{ github.event.inputs.testExecKeys }}
+        run: |
+          IFS=',' read -ra KEYS <<< "$TEST_EXEC_KEYS"
+          case ${{ matrix.Plan }} in
+            login)
+              echo "::set-output name=testExecKey::${KEYS[0]}"
+              ;;
+            details)
+              echo "::set-output name=testExecKey::${KEYS[1]}"
+              ;;
+            pnl)
+              echo "::set-output name=testExecKey::${KEYS[2]}"
+              ;;
+            *)
+              echo "::set-output name=testExecKey::unknown"
+              ;;
+          esac
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Compile and package our project
+        run: |
+          export DISPLAY=:99
+          Xvfb $DISPLAY -screen 0 1920x1080x16 -ac &
+          export DISPLAY=:99
+          export NSS_USE_SHARED_DB=ENABLED
+          export $(dbus-launch)
+          export NSS_USE_SHARED_DB=ENABLED
+          mvn -Dmaven.test.failure.ignore=true test -Dsurefire.suiteXmlFiles=$ROUTE/${{ matrix.Plan }}.xml | tee test_results.txt
+
+      - name: Listar archivos en el directorio 'aws/'
+        run: ls -la xray/
+          
+      - name: "Import results to Xray"
+        uses: mikepenz/xray-action@v3.0.4
+        with:
+          username: ${{ secrets.XRAY_USERNAME }}
+          password: ${{ secrets.XRAY_PASSWORD }}
+          testFormat: "junit"
+          testPaths: "**/target/surefire-reports/*.xml"
+          testExecKey: ${{ steps.setup-test-exec-key.outputs.testExecKey }}
+          projectKey: ${{ github.event.inputs.projectKey }}
+
+      - name: Print testExecKey for debugging
+        run: echo "Test Exec Key is ${{ steps.setup-test-exec-key.outputs.testExecKey }}"
