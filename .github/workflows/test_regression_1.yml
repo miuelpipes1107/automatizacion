@@ -87,6 +87,7 @@ jobs:
           testPaths: "**/target/surefire-reports/*.xml"
           testExecKey: ${{ steps.setup-test-exec-key.outputs.testExecKey }}
           projectKey: ${{ github.event.inputs.projectKey }}
+          testExecutionName: "Execution results for ${{ matrix.Plan }}"
 
       - name: Print testExecKey for debugging
         run: echo "Test Exec Key is ${{ steps.setup-test-exec-key.outputs.testExecKey }}"
