@@ -83,7 +83,7 @@ jobs:
         run: |
           # Autenticación con la API de Xray
           echo "Autenticando con la API de Xray..."
-          AUTH_RESPONSE=$(curl -s -X POST "$XRAY_API_BASE_URL/api/v1/login" \
+          AUTH_RESPONSE=$(curl -s -X POST "$XRAY_API_BASE_URL/api/v2/login" \
             -H "Content-Type: application/json" \
             -d '{"client_id": "'"$XRAY_CLIENT_ID"'", "client_secret": "'"$XRAY_CLIENT_SECRET"'"}')
 
