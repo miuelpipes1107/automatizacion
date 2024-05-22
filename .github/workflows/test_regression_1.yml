@@ -17,10 +17,7 @@ on:
 env:
   ROUTE: src/test/java/suites
   NAME_SPACE: "_"
-  RAY_API_BASE_URL: "https://xray.cloud.getxray.app"
-  XRAY_CLIENT_ID: "687D7A60E34D4FF5AEF1FBF7CBC4B8EA" # Reemplazar con tu ID de cliente Xray
-  XRAY_CLIENT_SECRET: "cd8d864267f5bd255dfd535afc5075dccc7a56c9cb86e8bc8563ca34e5480732" # Reemplazar con tu secreto de cliente Xray
-
+  
 jobs:
   job1:
     name: Requirements
@@ -79,8 +76,10 @@ jobs:
       - name: Update Test Execution in Xray
         id: update-test-execution
         env:
-          XRAY_API_BASE_URL: "https://xray.cloud.getxray.app"
-          TEST_EXEC_KEY: ${{ steps.import-to-xray.outputs.testExecKey }}  # Clave de ejecución de prueba existente
+          XRAY_API_BASE_URL: "https://xray.cloud.xpand-it.com"
+          TEST_EXEC_KEY: ${{ steps.import-to-xray.outputs.testExecKey }}
+          XRAY_CLIENT_ID: "687D7A60E34D4FF5AEF1FBF7CBC4B8EA"
+          XRAY_CLIENT_SECRET: "cd8d864267f5bd255dfd535afc5075dccc7a56c9cb86e8bc8563ca34e5480732"
         run: |
           # Autenticación con la API de Xray
           echo "Autenticando con la API de Xray..."
