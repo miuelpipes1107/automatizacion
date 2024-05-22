@@ -56,16 +56,16 @@ jobs:
           IFS=',' read -ra KEYS <<< "$TEST_EXEC_KEYS"
           case ${{ matrix.Plan }} in
             login)
-              echo "testExecKey=${KEYS[0]}" >> $GITHUB_ENV
+              echo "testExecKeys=${KEYS[0]}" >> $GITHUB_ENV
               ;;
             details)
-              echo "testExecKey=${KEYS[1]}" >> $GITHUB_ENV
+              echo "testExecKeys=${KEYS[1]}" >> $GITHUB_ENV
               ;;
             pnl)
-              echo "testExecKey=${KEYS[2]}" >> $GITHUB_ENV
+              echo "testExecKeys=${KEYS[2]}" >> $GITHUB_ENV
               ;;
             *)
-              echo "testExecKey=unknown" >> $GITHUB_ENV
+              echo "testExecKeys=unknown" >> $GITHUB_ENV
               ;;
           esac
           
@@ -76,7 +76,7 @@ jobs:
           
       - name: Debug testExecKey
         run: |
-         echo "testExecKey: ${{ env.testExecKey }}"    
+         echo "testExecKey: ${{ env.testExecKeys }}"    
           
 #      - name: Setup testExecKey
 #        id: setup-test-exec-key
