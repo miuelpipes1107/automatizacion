@@ -80,6 +80,10 @@ jobs:
 
       - name: Listar archivos en el directorio 'aws/'
         run: ls -la xray/
+      
+      - name: Install curl
+        run: |
+          apt-get update && apt-get install -y curl jq  
         
       - name: Create Test Execution in Xray
         id: create-test-execution
