@@ -17,7 +17,7 @@ on:
 env:
   ROUTE: src/test/java/suites
   NAME_SPACE: "_"
-  XRAY_API_BASE_URL: "https://miuelpipes1107.atlassian.net/rest/raven/2.0/api"
+  XRAY_API_BASE_URL: "https://xray.cloud.getxray.app"
   XRAY_CLIENT_ID: "687D7A60E34D4FF5AEF1FBF7CBC4B8EA" # replace with your actual Xray client ID
   XRAY_CLIENT_SECRET: "cd8d864267f5bd255dfd535afc5075dccc7a56c9cb86e8bc8563ca34e5480732" # replace with your actual Xray client secret
 
