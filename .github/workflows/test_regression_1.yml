@@ -69,9 +69,14 @@ jobs:
               ;;
           esac
           
-      - name: Debug testExecKey
+      - name: Print GITHUB_ENV
         run: |
-         echo "testExecKey: ${{ env.TEST_EXEC_KEY }}"    
+          cat $GITHUB_ENV
+    
+          
+#      - name: Debug testExecKey
+#        run: |
+#         echo "testExecKey: ${{ env.TEST_EXEC_KEY }}"    
           
 #      - name: Setup testExecKey
 #        id: setup-test-exec-key
