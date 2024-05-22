@@ -93,7 +93,7 @@ jobs:
           
       - name: Debug testExecKey
         run: |
-         echo "testExecKey: ${{ steps.setup-test-exec-key.outputs.testExecKey }}"
+         echo "testExecKey: ${{ env.testExecKey }}"
     
         
       - name: Compile and package our project
