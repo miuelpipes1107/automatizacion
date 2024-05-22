@@ -68,6 +68,11 @@ jobs:
               echo "::set-output name=testExecKey::unknown"
               ;;
           esac
+          
+      - name: Debug testExecKey
+        run: |
+         echo "testExecKey: ${{ steps.setup-test-exec-key.outputs.testExecKey }}"
+    
         
       - name: Compile and package our project
         run: |
