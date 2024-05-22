@@ -77,7 +77,7 @@ jobs:
 
       - name: Listar archivos en el directorio 'aws/'
         run: ls -la xray/
-      
+        
       - name: Create test execution in Xray
         id: create-test-execution
         uses: xray-actions/create-test-execution@v1
