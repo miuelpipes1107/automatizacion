@@ -17,6 +17,9 @@ on:
 env:
   ROUTE: src/test/java/suites
   NAME_SPACE: "_"
+  RAY_API_BASE_URL: "https://xray.cloud.getxray.app"
+  XRAY_CLIENT_ID: "687D7A60E34D4FF5AEF1FBF7CBC4B8EA" # Reemplazar con tu ID de cliente Xray
+  XRAY_CLIENT_SECRET: "cd8d864267f5bd255dfd535afc5075dccc7a56c9cb86e8bc8563ca34e5480732" # Reemplazar con tu secreto de cliente Xray
 
 jobs:
   job1:
@@ -76,7 +79,37 @@ jobs:
           mvn -Dmaven.test.failure.ignore=true test -Dsurefire.suiteXmlFiles=$ROUTE/${{ matrix.Plan }}.xml | tee test_results.txt
 
       - name: Listar archivos en el directorio 'aws/'
-        run: ls -la xray/       
+        run: ls -la xray/
+        
+      - name: Install curl
+        run: |
+          apt-get update && apt-get install -y curl jq    
+        
+      - name: Create Test Execution in Xray
+        id: create-test-execution
+        env:
+          TEST_EXEC_KEY: ${{ steps.setup-test-exec-key.outputs.testExecKey }}
+        run: |
+          # Autenticación con la API de Xray
+          AUTH_RESPONSE=$(curl -s -X POST "$XRAY_API_BASE_URL/authenticate" \
+            -H "Content-Type: application/json" \
+            -d '{"client_id": "'"$XRAY_CLIENT_ID"'", "client_secret": "'"$XRAY_CLIENT_SECRET"'"}')
+          TOKEN=$(echo $AUTH_RESPONSE | jq -r '.token')
+
+          # Crear Test Execution
+          CREATE_RESPONSE=$(curl -s -X POST "$XRAY_API_BASE_URL/testexecutions" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $TOKEN" \
+            -d '{
+              "fields": {
+                "project": {"key": "'"${{ github.event.inputs.projectKey }}"'"},
+                "summary": "Execution results for '"${{ matrix.Plan }}"'",
+                "issuetype": {"name": "Test Execution"}
+              }
+            }')
+          EXECUTION_KEY=$(echo $CREATE_RESPONSE | jq -r '.key')
+
+          echo "::set-output name=testExecKey::$EXECUTION_KEY"  
             
       - name: "Import results to Xray"
         uses: mikepenz/xray-action@v3.0.4
@@ -86,8 +119,7 @@ jobs:
           testFormat: "junit"
           testPaths: "**/target/surefire-reports/*.xml"
           testExecKey: ${{ steps.setup-test-exec-key.outputs.testExecKey }}
-          projectKey: ${{ github.event.inputs.projectKey }}
-          combineInSingleTestExec: true
+          projectKey: ${{ github.event.inputs.projectKey }}          
 
       - name: Print testExecKey for debugging
         run: echo "Test Exec Key is ${{ steps.setup-test-exec-key.outputs.testExecKey }}"
