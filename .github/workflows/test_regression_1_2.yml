@@ -73,31 +73,53 @@ jobs:
       - name: "Use testExecKey"
         run: echo "The testExecKey is ${{ steps.import-to-xray.outputs.testExecKey }}"
         
-      - name: Update Test Execution Name in Jira
+      - name: Update Test Execution in Xray
+        id: update-test-execution
         env:
-          JIRA_BASE_URL: "https://miuelpipes1107.atlassian.net"
-          JIRA_USERNAME: "687D7A60E34D4FF5AEF1FBF7CBC4B8EA"
-          JIRA_API_TOKEN: "cd8d864267f5bd255dfd535afc5075dccc7a56c9cb86e8bc8563ca34e5480732"
-          TEST_EXEC_KEY: ${{ steps.import-to-xray.outputs.testExecKey }}  # Clave del issue en Jira
-          NEW_SUMMARY: "Nuevo nombre para la ejecución de prueba"
+          XRAY_API_BASE_URL: "https://xray.cloud.getxray.app"
+          TEST_EXEC_KEY: ${{ steps.import-to-xray.outputs.testExecKey }}
+          XRAY_CLIENT_ID: "687D7A60E34D4FF5AEF1FBF7CBC4B8EA"
+          XRAY_CLIENT_SECRET: "cd8d864267f5bd255dfd535afc5075dccc7a56c9cb86e8bc8563ca34e5480732"
         run: |
-          echo "Actualizando el nombre de la ejecución de prueba en Jira..."
-
-          # Realizar la solicitud para actualizar el issue en Jira
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X PUT -u "$JIRA_USERNAME:$JIRA_API_TOKEN" \
+          # Autenticación con la API de Xray
+          echo "Autenticando con la API de Xray..."
+          AUTH_RESPONSE=$(curl -s -X POST "$XRAY_API_BASE_URL/api/v2/authenticate" \
             -H "Content-Type: application/json" \
-            --data '{
-              "fields": {
-                "summary": "'"$NEW_SUMMARY"'"
-              }
-            }' \
-            "$JIRA_BASE_URL/rest/api/2/issue/$TEST_EXEC_KEY")
+            -d '{"client_id": "'"$XRAY_CLIENT_ID"'", "client_secret": "'"$XRAY_CLIENT_SECRET"'"}')
 
-          # Verificar si la solicitud fue exitosa
-          if [ "$RESPONSE" -ne 204 ]; then
-            echo "Error: No se pudo actualizar el nombre de la ejecución de prueba en Jira. Código de respuesta: $RESPONSE"
+          # Imprimir la respuesta de autenticación
+          echo "Respuesta de autenticación: $AUTH_RESPONSE"
+
+          # Extraer el token
+          TOKEN=$(echo $AUTH_RESPONSE | jq -r '.token')
+
+          # Verificar si se obtuvo el token correctamente
+          if [ -z "$TOKEN" ] || [ "$TOKEN" == "null" ]; then
+            echo "Error: No se pudo obtener el token de autenticación"
             exit 1
           fi
 
-          echo "Nombre de la ejecución de prueba actualizado correctamente en Jira"
+          echo "Token de autenticación obtenido: $TOKEN"
+
+          # Actualizar el resumen (nombre) de la ejecución de prueba existente
+          echo "Actualizando el nombre de la ejecución de prueba con key $TEST_EXEC_KEY..."
+          UPDATE_RESPONSE=$(curl -s -X PUT "$XRAY_API_BASE_URL/api/v2/testexecutions/$TEST_EXEC_KEY" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $TOKEN" \
+            -d '{
+              "fields": {
+                "summary": "Nuevo nombre para la ejecución de prueba"
+              }
+            }')
+
+          # Imprimir la respuesta de actualización
+          echo "Respuesta de actualización: $UPDATE_RESPONSE"
+
+          # Verificar si la actualización fue exitosa
+          if echo "$UPDATE_RESPONSE" | grep -q '"errors"'; then
+            echo "Error: No se pudo actualizar la ejecución de prueba"
+            exit 1
+          fi
+
+          echo "Ejecución de prueba actualizada correctamente"
    
