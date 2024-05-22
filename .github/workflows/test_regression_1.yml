@@ -56,18 +56,40 @@ jobs:
           IFS=',' read -ra KEYS <<< "$TEST_EXEC_KEYS"
           case ${{ matrix.Plan }} in
             login)
-              echo "::set-output name=testExecKey::${KEYS[0]}"
+              echo "testExecKey=${KEYS[0]}" >> $GITHUB_ENV
               ;;
             details)
-              echo "::set-output name=testExecKey::${KEYS[1]}"
+              echo "testExecKey=${KEYS[1]}" >> $GITHUB_ENV
               ;;
             pnl)
-              echo "::set-output name=testExecKey::${KEYS[2]}"
+              echo "testExecKey=${KEYS[2]}" >> $GITHUB_ENV
               ;;
             *)
-              echo "::set-output name=testExecKey::unknown"
+              echo "testExecKey=unknown" >> $GITHUB_ENV
               ;;
           esac
+          
+#      - name: Setup testExecKey
+#        id: setup-test-exec-key
+#        shell: bash
+#        env:
+#          TEST_EXEC_KEYS: ${{ github.event.inputs.testExecKeys }}
+#        run: |
+#          IFS=',' read -ra KEYS <<< "$TEST_EXEC_KEYS"
+#          case ${{ matrix.Plan }} in
+#            login)
+#              echo "::set-output name=testExecKey::${KEYS[0]}"
+#              ;;
+#            details)
+#              echo "::set-output name=testExecKey::${KEYS[1]}"
+#              ;;
+#            pnl)
+#              echo "::set-output name=testExecKey::${KEYS[2]}"
+#              ;;
+#            *)
+#              echo "::set-output name=testExecKey::unknown"
+#              ;;
+#          esac    
           
       - name: Debug testExecKey
         run: |
@@ -94,7 +116,7 @@ jobs:
       - name: Create Test Execution in Xray
         id: create-test-execution
         env:
-          TEST_EXEC_KEY: ${{ steps.setup-test-exec-key.outputs.testExecKey }}
+          TEST_EXEC_KEY: ${{ env.testExecKey }}
         run: |
           # Autenticación con la API de Xray
           AUTH_RESPONSE=$(curl -s -X POST "$XRAY_API_BASE_URL/authenticate" \
@@ -124,8 +146,8 @@ jobs:
           password: "cd8d864267f5bd255dfd535afc5075dccc7a56c9cb86e8bc8563ca34e5480732"
           testFormat: "junit"
           testPaths: "**/target/surefire-reports/*.xml"
-          testExecKey: ${{ steps.setup-test-exec-key.outputs.testExecKey }}
+          testExecKey: ${{ env.testExecKey }}
           projectKey: ${{ github.event.inputs.projectKey }}          
 
       - name: Print testExecKey for debugging
-        run: echo "Test Exec Key is ${{ steps.setup-test-exec-key.outputs.testExecKey }}"
+        run: echo "Test Exec Key is ${{ env.testExecKey }}
