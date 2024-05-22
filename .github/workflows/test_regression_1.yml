@@ -74,9 +74,9 @@ jobs:
           cat $GITHUB_ENV
     
           
-#      - name: Debug testExecKey
-#        run: |
-#         echo "testExecKey: ${{ env.TEST_EXEC_KEY }}"    
+      - name: Debug testExecKey
+        run: |
+         echo "testExecKey: ${{ env.testExecKey }}"    
           
 #      - name: Setup testExecKey
 #        id: setup-test-exec-key
