@@ -40,65 +40,11 @@ jobs:
     strategy:
       matrix:
         Plan: [login, details, pnl]
-#        testExecKey: [null]
 
     steps:
         
       - name: Checkout code
-        uses: actions/checkout@v3
-        
-#      - name: Setup testExecKey
-#        id: setup-test-exec-key
-#        shell: bash
-#        env:
-#          TEST_EXEC_KEYS: ${{ github.event.inputs.testExecKeys }}
-#        run: |
-#          IFS=',' read -ra KEYS <<< "$TEST_EXEC_KEYS"
-#          case ${{ matrix.Plan }} in
-#            login)
-#              echo "testExecKeys=${KEYS[0]}" >> $GITHUB_ENV
-#              ;;
-#            details)
-#              echo "testExecKeys=${KEYS[1]}" >> $GITHUB_ENV
-#              ;;
-#            pnl)
-#              echo "testExecKeys=${KEYS[2]}" >> $GITHUB_ENV
-#              ;;
-#            *)
-#              echo "testExecKeys=unknown" >> $GITHUB_ENV
-#              ;;
-#          esac
-          
-#      - name: Print GITHUB_ENV
-#        run: |
-#          cat $GITHUB_ENV
-#    
-#          
-#      - name: Debug testExecKey
-#        run: |
-#         echo "testExecKey: ${{ env.testExecKeys }}"    
-          
-#      - name: Setup testExecKey
-#        id: setup-test-exec-key
-#        shell: bash
-#        env:
-#          TEST_EXEC_KEYS: ${{ github.event.inputs.testExecKeys }}
-#        run: |
-#          IFS=',' read -ra KEYS <<< "$TEST_EXEC_KEYS"
-#          case ${{ matrix.Plan }} in
-#            login)
-#              echo "::set-output name=testExecKey::${KEYS[0]}"
-#              ;;
-#            details)
-#              echo "::set-output name=testExecKey::${KEYS[1]}"
-#              ;;
-#            pnl)
-#              echo "::set-output name=testExecKey::${KEYS[2]}"
-#              ;;
-#            *)
-#              echo "::set-output name=testExecKey::unknown"
-#              ;;
-#          esac    
+        uses: actions/checkout@v3    
           
       - name: Compile and package our project
         run: |
@@ -113,10 +59,10 @@ jobs:
       - name: Listar archivos en el directorio 'aws/'
         run: ls -la xray/
         
-#      - name: Install curl
-#        run: |
-#          apt-get update && apt-get install -y curl jq    
-#        
+      - name: Install curl
+        run: |
+          apt-get update && apt-get install -y curl jq    
+        
 #      - name: Create Test Execution in Xray
 #        id: create-test-execution
 #        env:
@@ -144,6 +90,7 @@ jobs:
 #          echo "::set-output name=testExecKey::$EXECUTION_KEY"  
             
       - name: "Import results to Xray"
+        id: import-to-xray
         uses: mikepenz/xray-action@v3.0.4
         with:
           username: "687D7A60E34D4FF5AEF1FBF7CBC4B8EA"
@@ -151,5 +98,6 @@ jobs:
           testFormat: "junit"
           testPaths: "**/target/surefire-reports/*.xml"          
           projectKey: ${{ github.event.inputs.projectKey }}
-#      - name: Print testExecKey for debugging
-#        run: echo "Test Exec Key is ${{ env.testExecKey }}
+          
+      - name: "Use testExecKey"
+        run: echo "The testExecKey is ${{ steps.import-to-xray.outputs.testExecKey }}"    
