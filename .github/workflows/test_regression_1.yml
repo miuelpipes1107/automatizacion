@@ -43,6 +43,10 @@ jobs:
         testExecKey: [null]
 
     steps:
+        
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
       - name: Setup testExecKey
         id: setup-test-exec-key
         shell: bash
@@ -64,9 +68,6 @@ jobs:
               echo "::set-output name=testExecKey::unknown"
               ;;
           esac
-
-      - name: Checkout code
-        uses: actions/checkout@v3
         
       - name: Compile and package our project
         run: |
