@@ -17,9 +17,6 @@ on:
 env:
   ROUTE: src/test/java/suites
   NAME_SPACE: "_"
-  XRAY_API_BASE_URL: "https://xray.cloud.xpand-it.com/api/v2"
-  XRAY_CLIENT_ID: "687D7A60E34D4FF5AEF1FBF7CBC4B8EA" # replace with your actual Xray client ID
-  XRAY_CLIENT_SECRET: "cd8d864267f5bd255dfd535afc5075dccc7a56c9cb86e8bc8563ca34e5480732" # replace with your actual Xray client secret
 
 jobs:
   job1:
@@ -80,32 +77,6 @@ jobs:
 
       - name: Listar archivos en el directorio 'aws/'
         run: ls -la xray/
-        
-      - name: Create Test Execution in Xray
-        id: create-test-execution
-        env:
-          TEST_EXEC_KEY: ${{ steps.setup-test-exec-key.outputs.testExecKey }}
-        run: |
-          # Authenticate with Xray API
-          AUTH_RESPONSE=$(curl -s -X POST "$XRAY_API_BASE_URL/authenticate" \
-            -H "Content-Type: application/json" \
-            -d '{"client_id": "'"$XRAY_CLIENT_ID"'", "client_secret": "'"$XRAY_CLIENT_SECRET"'"}')
-          TOKEN=$(echo $AUTH_RESPONSE | jq -r '.token')
-
-          # Create Test Execution
-          CREATE_RESPONSE=$(curl -s -X POST "$XRAY_API_BASE_URL/testexecutions" \
-            -H "Content-Type: application/json" \
-            -H "Authorization: Bearer $TOKEN" \
-            -d '{
-              "fields": {
-                "project": {"key": "'"${{ github.event.inputs.projectKey }}"'"},
-                "summary": "Execution results for '"${{ matrix.Plan }}"'",
-                "issuetype": {"name": "Test Execution"}
-              }
-            }')
-          EXECUTION_KEY=$(echo $CREATE_RESPONSE | jq -r '.key')
-
-          echo "::set-output name=testExecKey::$EXECUTION_KEY"  
           
       - name: "Import results to Xray"
         uses: mikepenz/xray-action@v3.0.4
