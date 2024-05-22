@@ -76,28 +76,39 @@ jobs:
       - name: "Use testExecKey"
         run: echo "The testExecKey is ${{ steps.import-to-xray.outputs.testExecKey }}"
         
-      - name: Create Test Execution in Xray
-        id: create-test-execution
+      - name: Update Test Execution in Xray
+        id: update-test-execution
         env:
-          TEST_EXEC_KEY: ${{ steps.import-to-xray.outputs.testExecKey }}
+          XRAY_API_BASE_URL: "https://xray.cloud.getxray.app"
+          TEST_EXEC_KEY: ${{ steps.import-to-xray.outputs.testExecKey }}  # Clave de ejecución de prueba existente
         run: |
           # Autenticación con la API de Xray
-          AUTH_RESPONSE=$(curl -s -X POST "$XRAY_API_BASE_URL/authenticate" \
+          AUTH_RESPONSE=$(curl -s -X POST "$XRAY_API_BASE_URL/api/v2/authenticate" \
             -H "Content-Type: application/json" \
             -d '{"client_id": "'"$XRAY_CLIENT_ID"'", "client_secret": "'"$XRAY_CLIENT_SECRET"'"}')
           TOKEN=$(echo $AUTH_RESPONSE | jq -r '.token')
 
-          # Crear Test Execution
-          CREATE_RESPONSE=$(curl -s -X POST "$XRAY_API_BASE_URL/testexecutions" \
+          # Verificar si se obtuvo el token correctamente
+          if [ -z "$TOKEN" ] || [ "$TOKEN" == "null" ]; then
+            echo "Error: No se pudo obtener el token de autenticación"
+            exit 1
+          fi
+
+          # Actualizar el resumen (nombre) de la ejecución de prueba existente
+          UPDATE_RESPONSE=$(curl -s -X PUT "$XRAY_API_BASE_URL/api/v2/testexecutions/$TEST_EXEC_KEY" \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $TOKEN" \
             -d '{
               "fields": {
-                "project": {"key": "'"${{ github.event.inputs.projectKey }}"'"},
-                "summary": "Execution results for '"${{ matrix.Plan }}"'",
-                "issuetype": {"name": "Test Execution"}
+                "summary": "Nuevo nombre para la ejecución de prueba"
               }
             }')
-          EXECUTION_KEY=$(echo $CREATE_RESPONSE | jq -r '.key')
 
-          echo "::set-output name=testExecKey::$EXECUTION_KEY"   
+          # Verificar si la actualización fue exitosa
+          if echo "$UPDATE_RESPONSE" | grep -q '"errors"'; then
+            echo "Error: No se pudo actualizar la ejecución de prueba"
+            echo "Respuesta de actualización: $UPDATE_RESPONSE"
+            exit 1
+          fi
+
+          echo "Ejecución de prueba actualizada correctamente"   
