@@ -83,9 +83,15 @@ jobs:
           TEST_EXEC_KEY: ${{ steps.import-to-xray.outputs.testExecKey }}  # Clave de ejecución de prueba existente
         run: |
           # Autenticación con la API de Xray
+          echo "Autenticando con la API de Xray..."
           AUTH_RESPONSE=$(curl -s -X POST "$XRAY_API_BASE_URL/api/v2/authenticate" \
             -H "Content-Type: application/json" \
             -d '{"client_id": "'"$XRAY_CLIENT_ID"'", "client_secret": "'"$XRAY_CLIENT_SECRET"'"}')
+
+          # Imprimir la respuesta de autenticación
+          echo "Respuesta de autenticación: $AUTH_RESPONSE"
+
+          # Extraer el token
           TOKEN=$(echo $AUTH_RESPONSE | jq -r '.token')
 
           # Verificar si se obtuvo el token correctamente
@@ -94,7 +100,10 @@ jobs:
             exit 1
           fi
 
+          echo "Token de autenticación obtenido: $TOKEN"
+
           # Actualizar el resumen (nombre) de la ejecución de prueba existente
+          echo "Actualizando el nombre de la ejecución de prueba con key $TEST_EXEC_KEY..."
           UPDATE_RESPONSE=$(curl -s -X PUT "$XRAY_API_BASE_URL/api/v2/testexecutions/$TEST_EXEC_KEY" \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $TOKEN" \
@@ -104,11 +113,14 @@ jobs:
               }
             }')
 
+          # Imprimir la respuesta de actualización
+          echo "Respuesta de actualización: $UPDATE_RESPONSE"
+
           # Verificar si la actualización fue exitosa
           if echo "$UPDATE_RESPONSE" | grep -q '"errors"'; then
             echo "Error: No se pudo actualizar la ejecución de prueba"
-            echo "Respuesta de actualización: $UPDATE_RESPONSE"
             exit 1
           fi
 
-          echo "Ejecución de prueba actualizada correctamente"   
+          echo "Ejecución de prueba actualizada correctamente"
+   
