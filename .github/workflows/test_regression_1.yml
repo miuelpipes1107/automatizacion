@@ -76,17 +76,8 @@ jobs:
           mvn -Dmaven.test.failure.ignore=true test -Dsurefire.suiteXmlFiles=$ROUTE/${{ matrix.Plan }}.xml | tee test_results.txt
 
       - name: Listar archivos en el directorio 'aws/'
-        run: ls -la xray/
-        
-      - name: Create test execution in Xray
-        id: create-test-execution
-        uses: xray-actions/create-test-execution@v1
-        with:
-          xrayInstance: 'https://miuelpipes1107.atlassian.net'
-          projectKey: ${{ github.event.inputs.projectKey }}
-          testExecutionName: ${{ matrix.Plan }}
-          testExecKey: ${{ steps.setup-test-exec-key.outputs.testExecKey }}  
-          
+        run: ls -la xray/       
+            
       - name: "Import results to Xray"
         uses: mikepenz/xray-action@v3.0.4
         with:
@@ -96,7 +87,7 @@ jobs:
           testPaths: "**/target/surefire-reports/*.xml"
           testExecKey: ${{ steps.setup-test-exec-key.outputs.testExecKey }}
           projectKey: ${{ github.event.inputs.projectKey }}
-          testExecutionName: "Execution results for ${{ matrix.Plan }}"
+          combineInSingleTestExec: true
 
       - name: Print testExecKey for debugging
         run: echo "Test Exec Key is ${{ steps.setup-test-exec-key.outputs.testExecKey }}"
