@@ -17,7 +17,7 @@ on:
 env:
   ROUTE: src/test/java/suites
   NAME_SPACE: "_"
-  XRAY_API_BASE_URL: "https://xray.cloud.xpand-it.com/api/v2"
+  XRAY_API_BASE_URL: "https://miuelpipes1107.atlassian.net/rest/raven/2.0/api"
   XRAY_CLIENT_ID: "687D7A60E34D4FF5AEF1FBF7CBC4B8EA" # replace with your actual Xray client ID
   XRAY_CLIENT_SECRET: "cd8d864267f5bd255dfd535afc5075dccc7a56c9cb86e8bc8563ca34e5480732" # replace with your actual Xray client secret
 
@@ -83,14 +83,7 @@ jobs:
       
       - name: Install curl
         run: |
-          apt-get update && apt-get install -y curl jq
-          
-      - name: Debug Network Issues
-        run: |
-          echo "Testing network connectivity..."
-          ping -c 4 google.com
-          echo "Testing DNS resolution..."
-          nslookup xray.cloud.xpand-it.com    
+          apt-get update && apt-get install -y curl jq    
         
       - name: Create Test Execution in Xray
         id: create-test-execution
