@@ -61,34 +61,8 @@ jobs:
         
       - name: Install curl
         run: |
-          apt-get update && apt-get install -y curl jq    
-        
-#      - name: Create Test Execution in Xray
-#        id: create-test-execution
-#        env:
-#          TEST_EXEC_KEY: ${{ env.testExecKey }}
-#        run: |
-#          # Autenticación con la API de Xray
-#          AUTH_RESPONSE=$(curl -s -X POST "$XRAY_API_BASE_URL/authenticate" \
-#            -H "Content-Type: application/json" \
-#            -d '{"client_id": "'"$XRAY_CLIENT_ID"'", "client_secret": "'"$XRAY_CLIENT_SECRET"'"}')
-#          TOKEN=$(echo $AUTH_RESPONSE | jq -r '.token')
-#
-#          # Crear Test Execution
-#          CREATE_RESPONSE=$(curl -s -X POST "$XRAY_API_BASE_URL/testexecutions" \
-#            -H "Content-Type: application/json" \
-#            -H "Authorization: Bearer $TOKEN" \
-#            -d '{
-#              "fields": {
-#                "project": {"key": "'"${{ github.event.inputs.projectKey }}"'"},
-#                "summary": "Execution results for '"${{ matrix.Plan }}"'",
-#                "issuetype": {"name": "Test Execution"}
-#              }
-#            }')
-#          EXECUTION_KEY=$(echo $CREATE_RESPONSE | jq -r '.key')
-#
-#          echo "::set-output name=testExecKey::$EXECUTION_KEY"  
-            
+          apt-get update && apt-get install -y curl jq   
+           
       - name: "Import results to Xray"
         id: import-to-xray
         uses: mikepenz/xray-action@v3.0.4
@@ -100,4 +74,30 @@ jobs:
           projectKey: ${{ github.event.inputs.projectKey }}
           
       - name: "Use testExecKey"
-        run: echo "The testExecKey is ${{ steps.import-to-xray.outputs.testExecKey }}"    
+        run: echo "The testExecKey is ${{ steps.import-to-xray.outputs.testExecKey }}"
+        
+      - name: Create Test Execution in Xray
+        id: create-test-execution
+        env:
+          TEST_EXEC_KEY: ${{ steps.import-to-xray.outputs.testExecKey }}
+        run: |
+          # Autenticación con la API de Xray
+          AUTH_RESPONSE=$(curl -s -X POST "$XRAY_API_BASE_URL/authenticate" \
+            -H "Content-Type: application/json" \
+            -d '{"client_id": "'"$XRAY_CLIENT_ID"'", "client_secret": "'"$XRAY_CLIENT_SECRET"'"}')
+          TOKEN=$(echo $AUTH_RESPONSE | jq -r '.token')
+
+          # Crear Test Execution
+          CREATE_RESPONSE=$(curl -s -X POST "$XRAY_API_BASE_URL/testexecutions" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $TOKEN" \
+            -d '{
+              "fields": {
+                "project": {"key": "'"${{ github.event.inputs.projectKey }}"'"},
+                "summary": "Execution results for '"${{ matrix.Plan }}"'",
+                "issuetype": {"name": "Test Execution"}
+              }
+            }')
+          EXECUTION_KEY=$(echo $CREATE_RESPONSE | jq -r '.key')
+
+          echo "::set-output name=testExecKey::$EXECUTION_KEY"   
