@@ -83,7 +83,14 @@ jobs:
       
       - name: Install curl
         run: |
-          apt-get update && apt-get install -y curl jq  
+          apt-get update && apt-get install -y curl jq
+          
+      - name: Debug Network Issues
+        run: |
+          echo "Testing network connectivity..."
+          ping -c 4 google.com
+          echo "Testing DNS resolution..."
+          nslookup xray.cloud.xpand-it.com    
         
       - name: Create Test Execution in Xray
         id: create-test-execution
