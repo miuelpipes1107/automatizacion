@@ -97,7 +97,7 @@ jobs:
         env:
           JIRA_BASE_URL: "https://miuelpipes1107.atlassian.net"
           JIRA_USER_EMAIL: "miuelpipes1107@gmail.com"
-          JIRA_API_TOKEN: "ATATT3xFfGF0aCQ_dpv9BmklmwkNB-gTJeQnGD11Tq4LlcSo-s6SqJxlrdl1QmKZyFG-xCUOsQExQZ2HcEupmLlW3-AjLE51MLHmRBbRc5j3miSY8mPkXmOWK5hB_OGcF4hE-s7dBIU-lT1hNnJkyxv2kFr7CkFPgbboJQbPx_WfX06WAsQrOtE=1375E60D"
+          JIRA_API_TOKEN: "ATATT3xFfGF0Gp7bOfqa2SJt3-hbKRpLRWCGMvmCfOutFW01ItIRRogLq6jwxtRitE5IV0rAHamOw6BnqJaqLoFg-ZnDMKXNXB4v39RKe1E17U5D11VDiEvKkPUfuyaBEsWhdBK0LBgDIciM1qVg33NQta4kqUWoSiDFwArUhjYVr-IogweXQb8=84FA6627"
 #
 #      - name: Update Fields
 #        id: updatefields
