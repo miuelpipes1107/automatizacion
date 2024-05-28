@@ -72,11 +72,32 @@ jobs:
           
       - name: "Use testExecKey"
         run: echo "The testExecKey is ${{ steps.import-to-xray.outputs.testExecKey }}"
+    
+      - name: Authenticate to Xray
+        id: authenticate_xray
+        run: |
+            response=$(curl -X POST \
+              https://xray.cloud.getxray.app/api/v2/authenticate \
+              -H "Content-Type: application/json" \
+              -d "{\"client_id\": \"${{ secrets.XRAY_CLIENT_ID }}\", \"client_secret\": \"${{ secrets.XRAY_CLIENT_SECRET }}\"}" \
+            )
+            echo "token=$response" >> $GITHUB_ENV  
         
-        #login
-      - name: Jira Login
-        uses: atlassian/gajira-login@v3
-        env:
-          JIRA_BASE_URL: "https://miuelpipes1107.atlassian.net"
-          JIRA_USER_EMAIL: "miuelpipes1107@gmail.com"
-          JIRA_API_TOKEN: "ATATT3xFfGF0G1mB9nQp8TnCwcDUwKKjDHs6EHpHudVS242ihFxwfGoht6ruFPm9Zw7vTW9lDvThk6q5_8wNyOmcd_8X2rz08FeaHrbZr5Uyz2j8B1x-dcahCnooayVLFoXFIgC4V9-KNI8h3XCSFtAobzMx8eX6v_Z-g3c3FDrld-B0aRQ0bMY=C8D9D917"  
+
+      - name: Update Jira Issue
+        run: |
+          jira_url="https://miuelpipes1107.atlassian.net/rest/api/3/issue/${{ steps.import-to-xray.outputs.testExecKey }}"
+          jira_payload=$(cat <<EOF
+          {
+            "fields": {
+              "summary": "Nuevo nombre del issue"
+            }
+          }
+          EOF
+          )
+          curl -X PUT \
+            "$jira_url" \
+            -H "Authorization: Bearer ${{ env.token }}" \
+            -H "Accept: application/json" \
+            -H "Content-Type: application/json" \
+            --data "$jira_payload"  
