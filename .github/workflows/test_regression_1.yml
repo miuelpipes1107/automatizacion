@@ -96,8 +96,8 @@ jobs:
         uses: frieder/gha-jira-login@v1
         env:
           JIRA_BASE_URL: "https://miuelpipes1107.atlassian.net"
-          JIRA_USER_EMAIL: "687D7A60E34D4FF5AEF1FBF7CBC4B8EA"
-          JIRA_API_TOKEN: "cd8d864267f5bd255dfd535afc5075dccc7a56c9cb86e8bc8563ca34e5480732"
+          JIRA_USER_EMAIL: "miuelpipes1107@gmail.com"
+          JIRA_API_TOKEN: "ATATT3xFfGF0FRZEf3QDUVPcwMvzqcnLoxNb_3eT_7z1L1LeKotPsciJQ36jy-ncnmE5UwlqQK4I6LtbwSjfTJOTp-NIV9Ck2fOVYgElhfFUB0-kSNUtmtMOjiu7fnhVyvYtN7zqewFfr6-aYbTsX4EgTlk8BCi7L5pm4ZhIL31m4SYAWJThTag=B11755AF"
 
       - name: Update Fields
         id: updatefields
