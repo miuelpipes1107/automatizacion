@@ -3,8 +3,7 @@ name: automation_regression
 
 # Events that trigger the execution of the workflow
 on:
-  push:
-    # Allows you to specify the branches on which the workflow will be triggered
+  push:    
     # Allows you to specify the branches on which the workflow will be triggered
     branches: [ regression ]
   pull_request:  
