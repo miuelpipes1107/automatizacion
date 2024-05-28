@@ -84,8 +84,8 @@ jobs:
       - name: "Import results to Xray"
         uses: mikepenz/xray-action@v3.0.4
         with:
-          username: "687D7A60E34D4FF5AEF1FBF7CBC4B8EA"
-          password: "cd8d864267f5bd255dfd535afc5075dccc7a56c9cb86e8bc8563ca34e5480732"
+          username: ${{ secrets.XRAY_CLIENT_ID }}
+          password: ${{ secrets.XRAY_CLIENT_SECRET }}
           testFormat: "junit"
           testPaths: "**/target/surefire-reports/*.xml"
           testExecKey: "A3-32"
