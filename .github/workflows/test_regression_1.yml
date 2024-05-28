@@ -76,7 +76,7 @@ jobs:
       - name: Verify Test Execution Key
         env:
           JIRA_BASE_URL: "https://miuelpipes1107.atlassian.net"
-          JIRA_USERNAME: "miuelpipes1107@gmail.com"
+          JIRA_USERNAME: "687D7A60E34D4FF5AEF1FBF7CBC4B8EA"
           JIRA_API_TOKEN: "cd8d864267f5bd255dfd535afc5075dccc7a56c9cb86e8bc8563ca34e5480732"
           TEST_EXEC_KEY: ${{ steps.import-to-xray.outputs.testExecKey }}
         run: |
@@ -95,7 +95,7 @@ jobs:
       - name: Update Test Execution Name in Jira
         env:
           JIRA_BASE_URL: "https://miuelpipes1107.atlassian.net"
-          JIRA_USERNAME: "miuelpipes1107@gmail.com"
+          JIRA_USERNAME: "687D7A60E34D4FF5AEF1FBF7CBC4B8EA"
           JIRA_API_TOKEN: "cd8d864267f5bd255dfd535afc5075dccc7a56c9cb86e8bc8563ca34e5480732"
           TEST_EXEC_KEY: ${{ steps.import-to-xray.outputs.testExecKey }}
           NEW_SUMMARY: "Nuevo nombre para la ejecución de prueba"
