@@ -91,14 +91,14 @@ jobs:
 #          fi
 #
 #          echo "Access to the issue verified successfully." ${{ secrets.JIRA_TOKEN }}
-        #login  
+         
       - name: Jira Login
         uses: atlassian/gajira-login@v3
         env:
           JIRA_BASE_URL: "https://miuelpipes1107.atlassian.net"
           JIRA_USER_EMAIL: "miuelpipes1107@gmail.com"
           JIRA_API_TOKEN: "ATATT3xFfGF0Gp7bOfqa2SJt3-hbKRpLRWCGMvmCfOutFW01ItIRRogLq6jwxtRitE5IV0rAHamOw6BnqJaqLoFg-ZnDMKXNXB4v39RKe1E17U5D11VDiEvKkPUfuyaBEsWhdBK0LBgDIciM1qVg33NQta4kqUWoSiDFwArUhjYVr-IogweXQb8=84FA6627"
-#
+
 #      - name: Update Fields
 #        id: updatefields
 #        uses: frieder/jira-issue-updater@v1.1.0
