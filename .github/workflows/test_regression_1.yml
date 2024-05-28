@@ -72,3 +72,10 @@ jobs:
           
       - name: "Use testExecKey"
         run: echo "The testExecKey is ${{ steps.import-to-xray.outputs.testExecKey }}"
+        
+      - name: Jira Login
+        uses: atlassian/gajira-login@v3
+        env:
+          JIRA_BASE_URL: "https://miuelpipes1107.atlassian.net"
+          JIRA_USER_EMAIL: "miuelpipes1107@gmail.com"
+          JIRA_API_TOKEN: "ATATT3xFfGF0G1mB9nQp8TnCwcDUwKKjDHs6EHpHudVS242ihFxwfGoht6ruFPm9Zw7vTW9lDvThk6q5_8wNyOmcd_8X2rz08FeaHrbZr5Uyz2j8B1x-dcahCnooayVLFoXFIgC4V9-KNI8h3XCSFtAobzMx8eX6v_Z-g3c3FDrld-B0aRQ0bMY=C8D9D917"  
