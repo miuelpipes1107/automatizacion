@@ -74,23 +74,23 @@ jobs:
         run: echo "The testExecKey is ${{ steps.import-to-xray.outputs.testExecKey }}"
         
 
-        #login 
-      - name: Jira Login
-        uses: atlassian/gajira-login@v3
-        env:
-          JIRA_BASE_URL: "https://miuelpipes1107.atlassian.net"
-          JIRA_USER_EMAIL: "miuelpipes1107@gmail.com"
-          JIRA_API_TOKEN: "ATATT3xFfGF0mVFOLtpu6IIXlIRs1r9BMtqAVbCtDwrQL6MvZMPk83Q6N1q1nCh2sz_JoATa0AR0HJzsTSHAnI5VFKHj9Ncmvg4Ouse3B0IrmEUZHZvB4ymcQQIeebZ7EyhcoVKhOijdRB3uM4tpb9ZZGtb5r_VGOltc87WM4LvV9N8MFvl-6X8=94705151"
-
-      - name: Update Fields
-        id: updatefields
-        uses: frieder/jira-issue-updater@v1.1.0
-        with:
-          retries: 1
-          retryDelay: 10
-          timeout: 2000
-          failOnError: true
-          # either one of the following three config option formats of 'issue' is valid
-          issue: ${{ steps.import-to-xray.outputs.testExecKey }}          
-          summary: Some fancy title
-          description: Plaintext only
+#        #login 
+#      - name: Jira Login
+#        uses: atlassian/gajira-login@v3
+#        env:
+#          JIRA_BASE_URL: "https://miuelpipes1107.atlassian.net"
+#          JIRA_USER_EMAIL: "miuelpipes1107@gmail.com"
+#          JIRA_API_TOKEN: "ATATT3xFfGF0mVFOLtpu6IIXlIRs1r9BMtqAVbCtDwrQL6MvZMPk83Q6N1q1nCh2sz_JoATa0AR0HJzsTSHAnI5VFKHj9Ncmvg4Ouse3B0IrmEUZHZvB4ymcQQIeebZ7EyhcoVKhOijdRB3uM4tpb9ZZGtb5r_VGOltc87WM4LvV9N8MFvl-6X8=94705151"
+#
+#      - name: Update Fields
+#        id: updatefields
+#        uses: frieder/jira-issue-updater@v1.1.0
+#        with:
+#          retries: 1
+#          retryDelay: 10
+#          timeout: 2000
+#          failOnError: true
+#          # either one of the following three config option formats of 'issue' is valid
+#          issue: ${{ steps.import-to-xray.outputs.testExecKey }}          
+#          summary: Some fancy title
+#          description: Plaintext only
