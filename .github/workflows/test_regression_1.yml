@@ -110,6 +110,7 @@ jobs:
           # either one of the following three config option formats of 'issue' is valid
           # either one of the following three config option formats of 'issue' is valid
           # either one of the following three config option formats of 'issue' is valid
+          # either one of the following three config option formats of 'issue' is valid
           issue: ${{ steps.import-to-xray.outputs.testExecKey }}          
           summary: Some fancy title
           description: Plaintext only    
