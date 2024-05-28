@@ -5,6 +5,7 @@ name: automation_regression
 on:
   push:    
     # Allows you to specify the branches on which the workflow will be triggered
+    # Allows you to specify the branches on which the workflow will be triggered
     branches: [ regression ]
   pull_request:  
     branches: [ regression ]
