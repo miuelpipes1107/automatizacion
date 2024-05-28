@@ -63,7 +63,7 @@ jobs:
       - name: check our repository and download it to our instance
         uses: actions/checkout@v3
         
-        # Runs a single command using the runners sh
+        # Runs a single command using
       - name: Checkout code
         uses: actions/checkout@v2
 
