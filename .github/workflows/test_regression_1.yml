@@ -73,31 +73,31 @@ jobs:
       - name: "Use testExecKey"
         run: echo "The testExecKey is ${{ steps.import-to-xray.outputs.testExecKey }}"
         
-      - name: Verify Test Execution Key
-        env:
-          JIRA_BASE_URL: "https://miuelpipes1107.atlassian.net"
-          JIRA_USERNAME: "miuelpipes1107@gmail.com"
-          JIRA_API_TOKEN: "ATATT3xFfGF0aCQ_dpv9BmklmwkNB-gTJeQnGD11Tq4LlcSo-s6SqJxlrdl1QmKZyFG-xCUOsQExQZ2HcEupmLlW3-AjLE51MLHmRBbRc5j3miSY8mPkXmOWK5hB_OGcF4hE-s7dBIU-lT1hNnJkyxv2kFr7CkFPgbboJQbPx_WfX06WAsQrOtE=1375E60D"
-          TEST_EXEC_KEY: ${{ steps.import-to-xray.outputs.testExecKey }}
-        run: |
-          echo "Verifying access to the issue with key: $TEST_EXEC_KEY"
-          RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -u "$JIRA_USERNAME:$JIRA_API_TOKEN" \
-            -X GET "$JIRA_BASE_URL/rest/api/2/issue/$TEST_EXEC_KEY")
-
-          if [ "$RESPONSE" -ne 200 ]; then
-            echo "Error: Cannot access the issue with key $TEST_EXEC_KEY. HTTP Status: $RESPONSE"
-            echo "Response Body: $(cat response.txt)"
-            exit 1
-          fi
-
-          echo "Access to the issue verified successfully." ${{ secrets.JIRA_TOKEN }}
-          
-#      - name: Jira Login
-#        uses: frieder/gha-jira-login@v1
+#      - name: Verify Test Execution Key
 #        env:
 #          JIRA_BASE_URL: "https://miuelpipes1107.atlassian.net"
-#          JIRA_USER_EMAIL: "miuelpipes1107@gmail.com"
+#          JIRA_USERNAME: "miuelpipes1107@gmail.com"
 #          JIRA_API_TOKEN: "ATATT3xFfGF0aCQ_dpv9BmklmwkNB-gTJeQnGD11Tq4LlcSo-s6SqJxlrdl1QmKZyFG-xCUOsQExQZ2HcEupmLlW3-AjLE51MLHmRBbRc5j3miSY8mPkXmOWK5hB_OGcF4hE-s7dBIU-lT1hNnJkyxv2kFr7CkFPgbboJQbPx_WfX06WAsQrOtE=1375E60D"
+#          TEST_EXEC_KEY: ${{ steps.import-to-xray.outputs.testExecKey }}
+#        run: |
+#          echo "Verifying access to the issue with key: $TEST_EXEC_KEY"
+#          RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -u "$JIRA_USERNAME:$JIRA_API_TOKEN" \
+#            -X GET "$JIRA_BASE_URL/rest/api/2/issue/$TEST_EXEC_KEY")
+#
+#          if [ "$RESPONSE" -ne 200 ]; then
+#            echo "Error: Cannot access the issue with key $TEST_EXEC_KEY. HTTP Status: $RESPONSE"
+#            echo "Response Body: $(cat response.txt)"
+#            exit 1
+#          fi
+#
+#          echo "Access to the issue verified successfully." ${{ secrets.JIRA_TOKEN }}
+          
+      - name: Jira Login
+        uses: frieder/gha-jira-login@v1
+        env:
+          JIRA_BASE_URL: "https://miuelpipes1107.atlassian.net"
+          JIRA_USER_EMAIL: "miuelpipes1107@gmail.com"
+          JIRA_API_TOKEN: "ATATT3xFfGF0aCQ_dpv9BmklmwkNB-gTJeQnGD11Tq4LlcSo-s6SqJxlrdl1QmKZyFG-xCUOsQExQZ2HcEupmLlW3-AjLE51MLHmRBbRc5j3miSY8mPkXmOWK5hB_OGcF4hE-s7dBIU-lT1hNnJkyxv2kFr7CkFPgbboJQbPx_WfX06WAsQrOtE=1375E60D"
 #
 #      - name: Update Fields
 #        id: updatefields
@@ -112,31 +112,31 @@ jobs:
 #          summary: Some fancy title
 #          description: Plaintext only    
 
-      - name: Update Test Execution Name in Jira
-        env:
-          JIRA_BASE_URL: "https://miuelpipes1107.atlassian.net"
-          JIRA_USERNAME: "miuelpipes1107@gmail.com"
-          JIRA_API_TOKEN: "ATATT3xFfGF0aCQ_dpv9BmklmwkNB-gTJeQnGD11Tq4LlcSo-s6SqJxlrdl1QmKZyFG-xCUOsQExQZ2HcEupmLlW3-AjLE51MLHmRBbRc5j3miSY8mPkXmOWK5hB_OGcF4hE-s7dBIU-lT1hNnJkyxv2kFr7CkFPgbboJQbPx_WfX06WAsQrOtE=1375E60D"
-          TEST_EXEC_KEY: ${{ steps.import-to-xray.outputs.testExecKey }}
-          NEW_SUMMARY: "Nuevo nombre para la ejecución de prueba"
-        run: |
-          echo "Actualizando el nombre de la ejecución de prueba en Jira..."
-
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X PUT -u "$JIRA_USERNAME:$JIRA_API_TOKEN" \
-            -H "Content-Type: application/json" \
-            --data '{
-              "fields": {
-                "summary": "'"$NEW_SUMMARY"'"
-              }
-            }' \
-            "$JIRA_BASE_URL/rest/api/2/issue/$TEST_EXEC_KEY")
-
-          if [ "$RESPONSE" -ne 204 ]; then
-            echo "Error: No se pudo actualizar el nombre de la ejecución de prueba en Jira. Código de respuesta: $RESPONSE"
-            exit 1
-          fi
-
-          echo "Nombre de la ejecución de prueba actualizado correctamente en Jira"  
+#      - name: Update Test Execution Name in Jira
+#        env:
+#          JIRA_BASE_URL: "https://miuelpipes1107.atlassian.net"
+#          JIRA_USERNAME: "miuelpipes1107@gmail.com"
+#          JIRA_API_TOKEN: "ATATT3xFfGF0aCQ_dpv9BmklmwkNB-gTJeQnGD11Tq4LlcSo-s6SqJxlrdl1QmKZyFG-xCUOsQExQZ2HcEupmLlW3-AjLE51MLHmRBbRc5j3miSY8mPkXmOWK5hB_OGcF4hE-s7dBIU-lT1hNnJkyxv2kFr7CkFPgbboJQbPx_WfX06WAsQrOtE=1375E60D"
+#          TEST_EXEC_KEY: ${{ steps.import-to-xray.outputs.testExecKey }}
+#          NEW_SUMMARY: "Nuevo nombre para la ejecución de prueba"
+#        run: |
+#          echo "Actualizando el nombre de la ejecución de prueba en Jira..."
+#
+#          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X PUT -u "$JIRA_USERNAME:$JIRA_API_TOKEN" \
+#            -H "Content-Type: application/json" \
+#            --data '{
+#              "fields": {
+#                "summary": "'"$NEW_SUMMARY"'"
+#              }
+#            }' \
+#            "$JIRA_BASE_URL/rest/api/2/issue/$TEST_EXEC_KEY")
+#
+#          if [ "$RESPONSE" -ne 204 ]; then
+#            echo "Error: No se pudo actualizar el nombre de la ejecución de prueba en Jira. Código de respuesta: $RESPONSE"
+#            exit 1
+#          fi
+#
+#          echo "Nombre de la ejecución de prueba actualizado correctamente en Jira"  
         
 #      - name: Update Test Execution Name in Jira
 #        env:
