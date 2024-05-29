@@ -67,8 +67,8 @@ jobs:
               "summary": "${{ github.event.inputs.testExecName }}",
               "issuetype": { "id": "10007" },
               "components": [
-                { "name": {{ matrix.Plan }} },
-                { "name": {{ matrix.Plan }} }
+                { "name": ${{ matrix.Plan }} },
+                { "name": ${{ matrix.Plan }} }
               ]
             }
           }' > test_execution.json
