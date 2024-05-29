@@ -64,7 +64,7 @@ jobs:
         run: |
           echo '{
             "fields": {
-              "summary": "${{ matrix.Plan }}",
+              "summary": "Test github ${{ matrix.Plan }}",
               "issuetype": { "id": "10008" },
               "components": [
                 { "name": "${{ matrix.Plan }}" },
