@@ -64,14 +64,12 @@ jobs:
         run: |
           echo '{
             "fields": {
-              "summary": "${{ matrix.Plan }}",
-              "description": "Creada desde GitHub Actions",
-              "project": {
-                "key": "${{ github.event.inputs.projectKey }}"
-              },
-              "issuetype": {
-                "name": "${{ matrix.Plan }}"
-              }
+              "summary": "${{ github.event.inputs.testExecName }}",
+              "issuetype": { "id": "10007" },
+              "components": [
+                { "name": {{ matrix.Plan }} },
+                { "name": {{ matrix.Plan }} }
+              ]
             }
           }' > test_execution.json
            
@@ -84,7 +82,7 @@ jobs:
           testFormat: "junit"
           testPaths: "**/target/surefire-reports/*.xml"          
           projectKey: ${{ github.event.inputs.projectKey }}
-#          testExecutionJson: "./test_execution.json"
+          testExecutionJson: "./test_execution.json"
           
       - name: "Use testExecKey"
         run: echo "The testExecKey is ${{ steps.import-to-xray.outputs.testExecKey }}"
