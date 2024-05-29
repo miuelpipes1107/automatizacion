@@ -58,65 +58,33 @@ jobs:
         
       - name: Install curl
         run: |
-          apt-get update && apt-get install -y curl jq   
-           
-#      - name: "Import results to Xray"
-#        id: import-to-xray
-#        uses: mikepenz/xray-action@v3.0.4
-#        with:
-#          username: ${{ secrets.XRAY_CLIENT_ID }}
-#          password: ${{ secrets.XRAY_CLIENT_SECRET }}
-#          testFormat: "junit"
-#          testPaths: "**/target/surefire-reports/*.xml"          
-#          projectKey: ${{ github.event.inputs.projectKey }}
-#          
-#      - name: "Use testExecKey"
-#        run: echo "The testExecKey is ${{ steps.import-to-xray.outputs.testExecKey }}"
-        
-      - name: Create Xray Test Execution
-        uses: atlassian/xray-cloud-action@v1
-        with:
-          client_id: ${{ secrets.XRAY_CLIENT_ID }}
-          client_secret: ${{ secrets.XRAY_CLIENT_SECRET }}
-          test_execution_payload: |
-            {
-              "fields": {
-                "project": {
-                  "key": ${{ github.event.inputs.projectKey }}
-                },
-                "summary": "Ejecución de prueba automatizada",
-                "description": "Creada desde GitHub Actions",
-                "issuetype": {
-                  "name": "Test Execution"
-                }
+          apt-get update && apt-get install -y curl jq
+      
+      - name: Create test execution JSON
+        run: |
+          echo '{
+            "fields": {
+              "summary": "${{ matrix.Plan }}",
+              "description": "Creada desde GitHub Actions",
+              "project": {
+                "key": "${{ github.event.inputs.projectKey }}"
+              },
+              "issuetype": {
+                "name": "${{ matrix.Plan }}"
               }
-            }  
-    
-#      - name: Authenticate to Xray
-#        id: authenticate_xray
-#        run: |
-#            response=$(curl -X POST \
-#              https://xray.cloud.getxray.app/api/v2/authenticate \
-#              -H "Content-Type: application/json" \
-#              -d "{\"client_id\": \"${{ secrets.XRAY_CLIENT_ID }}\", \"client_secret\": \"${{ secrets.XRAY_CLIENT_SECRET }}\"}" \
-#            )
-#            echo "token=$response" >> $GITHUB_ENV  
-#        
-#
-#      - name: Update Jira Issue
-#        run: |
-#          jira_url="https://miuelpipes1107.atlassian.net/rest/api/3/issue/${{ steps.import-to-xray.outputs.testExecKey }}"
-#          jira_payload=$(cat <<EOF
-#          {
-#            "fields": {
-#              "summary": "Nuevo nombre del issue"
-#            }
-#          }
-#          EOF
-#          )
-#          curl -X PUT \
-#            "$jira_url" \
-#            -H "Authorization: Bearer ${{ env.token }}" \
-#            -H "Accept: application/json" \
-#            -H "Content-Type: application/json" \
-#            --data "$jira_payload"  
+            }
+          }' > test_execution.json
+           
+      - name: "Import results to Xray"
+        id: import-to-xray
+        uses: mikepenz/xray-action@v3.0.4
+        with:
+          username: ${{ secrets.XRAY_CLIENT_ID }}
+          password: ${{ secrets.XRAY_CLIENT_SECRET }}
+          testFormat: "junit"
+          testPaths: "**/target/surefire-reports/*.xml"          
+          projectKey: ${{ github.event.inputs.projectKey }}
+          
+      - name: "Use testExecKey"
+        run: echo "The testExecKey is ${{ steps.import-to-xray.outputs.testExecKey }}"
+ 
