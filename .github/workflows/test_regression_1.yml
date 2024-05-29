@@ -74,28 +74,23 @@ jobs:
 #        run: echo "The testExecKey is ${{ steps.import-to-xray.outputs.testExecKey }}"
         
       - name: Create Xray Test Execution
-        run: |
-          execution_url="https://xray.cloud.getxray.app/api/v2/testexec"
-          test_execution_payload=$(cat <<EOF
-          {
-            "fields": {
-              "project": {
-                "key": ${{ github.event.inputs.projectKey }}
-              },
-              "summary": "Ejecución de prueba automatizada",
-              "description": "Creada desde GitHub Actions",
-              "issuetype": {
-                "name": "Test Execution"
+        uses: atlassian/xray-cloud-action@v1
+        with:
+          client_id: ${{ secrets.XRAY_CLIENT_ID }}
+          client_secret: ${{ secrets.XRAY_CLIENT_SECRET }}
+          test_execution_payload: |
+            {
+              "fields": {
+                "project": {
+                  "key": ${{ github.event.inputs.projectKey }}
+                },
+                "summary": "Ejecución de prueba automatizada",
+                "description": "Creada desde GitHub Actions",
+                "issuetype": {
+                  "name": "Test Execution"
+                }
               }
-            }
-          }
-          EOF
-          )
-          curl -X POST \
-            "$execution_url" \
-            -H "Authorization: Bearer ${{ secrets.XRAY_CLIENT_SECRET }}" \
-            -H "Content-Type: application/json" \
-            --data "$test_execution_payload"  
+            }  
     
 #      - name: Authenticate to Xray
 #        id: authenticate_xray
