@@ -80,7 +80,7 @@ jobs:
           {
             "fields": {
               "project": {
-                "key": "PROJ"
+                "key": ${{ github.event.inputs.projectKey }}
               },
               "summary": "Ejecución de prueba automatizada",
               "description": "Creada desde GitHub Actions",
