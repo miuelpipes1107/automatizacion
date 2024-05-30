@@ -3,18 +3,13 @@ name: automation_regression
 on:
   workflow_dispatch:
     inputs:
-      testExecKey:
-        description: 'Test Exec ID from Xray'
+      testPlanKey:
+        description: 'TestPlanKey ID from Xray'
         default: ''
         required: true
         type: string
       projectKey:
         description: 'Project ID from Xray'
-        default: ''
-        required: true
-        type: string
-      testPlanKey:
-        description: 'TestPlanKey ID from Xray'
         default: ''
         required: true
         type: string  
@@ -81,9 +76,8 @@ jobs:
           
       - name: Print Inputs
         run: |
-          echo "Test Exec ID: ${{ github.event.inputs.testExecKey }}"
-          echo "Project ID: ${{ github.event.inputs.projectKey }}"
-          echo "Test Plan ID: ${{ github.event.inputs.testPlanKey }}"    
+          echo "Test Plan ID: ${{ github.event.inputs.testPlanKey }}"
+          echo "Project ID: ${{ github.event.inputs.projectKey }}"              
            
       - name: "Import results to Xray"
         id: import-to-xray
@@ -97,8 +91,8 @@ jobs:
           testPlanKey: ${{ github.event.inputs.testPlanKey }}
           testExecutionJson: "./test_execution.json"
           
-      - name: "Use testExecKey"
-        run: echo "The testExecKey is ${{ steps.import-to-xray.outputs.testExecKey }}"
+      - name: "Use projectKey"
+        run: echo "The projectKey is ${{ steps.import-to-xray.outputs.projectKey }}"
         
       - name: "Use testPlanKey"
         run: echo "The testPlanKey is ${{ steps.import-to-xray.outputs.testPlanKey }}"  
