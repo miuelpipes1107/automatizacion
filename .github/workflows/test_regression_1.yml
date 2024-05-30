@@ -78,6 +78,9 @@ jobs:
               "labels": ["ocultar"]
             }
           }' > test_execution.json
+          
+      - name: "Use testPlanKey"
+        run: echo "The testPlanKey is ${{ github.event.inputs.testPlanKey }}"    
            
       - name: "Import results to Xray"
         id: import-to-xray
