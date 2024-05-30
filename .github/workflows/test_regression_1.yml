@@ -70,7 +70,10 @@ jobs:
                 { "name": "${{ matrix.Plan }}" },
                 { "name": "${{ matrix.Plan }}" }
               ],
-              "labels": ["ocultar"]
+              "labels": [
+                { "id": "10005", "name": "ocultar" },
+                { "id": "10008", "name": "ocultar" }
+              ]
             }
           }' > test_execution.json
           
