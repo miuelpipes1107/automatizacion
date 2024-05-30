@@ -93,4 +93,7 @@ jobs:
           
       - name: "Use testExecKey"
         run: echo "The testExecKey is ${{ steps.import-to-xray.outputs.testExecKey }}"
+        
+      - name: "Use testPlanKey"
+        run: echo "The testPlanKey is ${{ steps.import-to-xray.outputs.testPlanKey }}"  
  
