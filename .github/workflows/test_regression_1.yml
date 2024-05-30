@@ -79,8 +79,11 @@ jobs:
             }
           }' > test_execution.json
           
-      - name: "Use testPlanKey"
-        run: echo "The testPlanKey is ${{ github.event.inputs.testPlanKey }}"    
+      - name: Print Inputs
+        run: |
+          echo "Test Exec ID: ${{ github.event.inputs.testExecKey }}"
+          echo "Project ID: ${{ github.event.inputs.projectKey }}"
+          echo "Test Plan ID: ${{ github.event.inputs.testPlanKey }}"    
            
       - name: "Import results to Xray"
         id: import-to-xray
