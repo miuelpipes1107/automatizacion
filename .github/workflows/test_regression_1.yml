@@ -90,30 +90,8 @@ jobs:
           testFormat: "junit"
           testPaths: "**/target/surefire-reports/*.xml"          
           projectKey: ${{ github.event.inputs.projectKey }}
+          testPlanKey: ${{ steps.set-inputs.outputs.testPlanKey }}
           testExecutionJson: "./test_execution.json"
-          
-          
-      - name: Associate the test execution with the test plan
-        run: |
-          curl -u ${{ secrets.XRAY_CLIENT_ID }}:${{ secrets.XRAY_CLIENT_SECRET }} \
-               -X POST \
-               -H "Content-Type: application/json" \
-               -d '{
-                     "add": [
-                       "${{ steps.import-to-xray.outputs.testExecKey }}"
-                     ]
-                   }' \
-               https://xray.cloud.getxray.app/api/v2/testplan/${{ steps.set-inputs.outputs.testPlanKey }}/testexecution
-               
-#      - name: "Associate the test execution with the test plan"
-#        id: import-to-test-plan
-#        uses: mikepenz/xray-action@v3.0.4
-#        with:
-#          username: ${{ secrets.XRAY_CLIENT_ID }}
-#          password: ${{ secrets.XRAY_CLIENT_SECRET }}          
-#          projectKey: ${{ github.event.inputs.projectKey }}
-#          testExecKey: ${{ steps.import-to-xray.outputs.testExecKey }}
-#          testPlanKey: ${{ steps.set-inputs.outputs.testPlanKey }}
           
       - name: "Use projectKey"
         run: echo "The projectKey is ${{ steps.import-to-xray.outputs.projectKey }}"
