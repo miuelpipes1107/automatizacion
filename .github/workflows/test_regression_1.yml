@@ -73,11 +73,11 @@ jobs:
               "labels": ["ocultar"]
             },
             "fields": {
-              "summary": "",
+              "summary": "Test",
               "issuetype": { "id": "10005" },
               "components": [
-                { "name": "" },
-                { "name": "" }
+                { "name": "Test" },
+                { "name": "Test" }
               ],
               "labels": ["ocultar"]
             }
