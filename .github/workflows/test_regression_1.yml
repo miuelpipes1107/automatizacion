@@ -13,6 +13,11 @@ on:
         default: ''
         required: true
         type: string
+      testPlanKey:
+        description: 'TestPlanKey ID from Xray'
+        default: ''
+        required: true
+        type: string  
 
 env:
   ROUTE: src/test/java/suites
@@ -69,7 +74,8 @@ jobs:
               "components": [
                 { "name": "${{ matrix.Plan }}" },
                 { "name": "${{ matrix.Plan }}" }
-              ]
+              ],
+              "labels": ["ocultar"]
             }
           }' > test_execution.json
            
@@ -82,6 +88,7 @@ jobs:
           testFormat: "junit"
           testPaths: "**/target/surefire-reports/*.xml"          
           projectKey: ${{ github.event.inputs.projectKey }}
+          testPlanKey: ${{ github.event.inputs.testPlanKey }}
           testExecutionJson: "./test_execution.json"
           
       - name: "Use testExecKey"
