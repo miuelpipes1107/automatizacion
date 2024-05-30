@@ -74,10 +74,11 @@ jobs:
             }
           }' > test_execution.json
           
-      - name: Print Inputs
+      - name: Print and Set Inputs
         id: set-inputs
         run: |
           echo "Project ID: ${{ github.event.inputs.projectKey }}"
+          echo "testPlanKey ID: ${{ github.event.inputs.testExecKey }}"
           echo "::set-output name=testPlanKey::${{ github.event.inputs.testExecKey }}"              
            
       - name: "Import results to Xray"
