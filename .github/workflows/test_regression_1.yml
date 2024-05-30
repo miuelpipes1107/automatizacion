@@ -3,8 +3,8 @@ name: automation_regression
 on:
   workflow_dispatch:
     inputs:
-      testPlanKey:
-        description: 'TestPlanKey ID from Xray'
+      testExecKey:
+        description: 'Test Exec ID from Xray'
         default: ''
         required: true
         type: string
@@ -76,7 +76,7 @@ jobs:
           
       - name: Print Inputs
         run: |
-          echo "Test Plan ID: ${{ github.event.inputs.testPlanKey }}"
+          echo "Test Plan ID: ${{ github.event.inputs.testExecKey }}"
           echo "Project ID: ${{ github.event.inputs.projectKey }}"              
            
       - name: "Import results to Xray"
@@ -88,12 +88,12 @@ jobs:
           testFormat: "junit"
           testPaths: "**/target/surefire-reports/*.xml"          
           projectKey: ${{ github.event.inputs.projectKey }}
-          testPlanKey: ${{ github.event.inputs.testPlanKey }}
+          testPlanKey: ${{ github.event.inputs.testExecKey }}
           testExecutionJson: "./test_execution.json"
           
       - name: "Use projectKey"
         run: echo "The projectKey is ${{ steps.import-to-xray.outputs.projectKey }}"
         
       - name: "Use testPlanKey"
-        run: echo "The testPlanKey is ${{ steps.import-to-xray.outputs.testPlanKey }}"  
+        run: echo "The testPlanKey is ${{ steps.import-to-xray.outputs.testExecKey }}"  
  
