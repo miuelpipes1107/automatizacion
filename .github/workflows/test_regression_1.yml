@@ -75,9 +75,10 @@ jobs:
           }' > test_execution.json
           
       - name: Print Inputs
+        id: set-inputs
         run: |
-          echo "Test Plan ID: ${{ github.event.inputs.testExecKey }}"
-          echo "Project ID: ${{ github.event.inputs.projectKey }}"              
+          echo "Project ID: ${{ github.event.inputs.projectKey }}"
+          echo "::set-output name=testPlanKey::${{ github.event.inputs.testExecKey }}"              
            
       - name: "Import results to Xray"
         id: import-to-xray
@@ -88,12 +89,24 @@ jobs:
           testFormat: "junit"
           testPaths: "**/target/surefire-reports/*.xml"          
           projectKey: ${{ github.event.inputs.projectKey }}
-          testPlanKey: ${{ github.event.inputs.testExecKey }}
           testExecutionJson: "./test_execution.json"
+          
+      - name: "Associate the test execution with the test plan"
+        id: import-to-test-plan
+        uses: mikepenz/xray-action@v3.0.4
+        with:
+          username: ${{ secrets.XRAY_CLIENT_ID }}
+          password: ${{ secrets.XRAY_CLIENT_SECRET }}          
+          projectKey: ${{ github.event.inputs.projectKey }}
+          testExecKey: ${{ steps.import-to-xray.outputs.testExecKey }}
+          testPlanKey: ${{ steps.set-inputs.outputs.testPlanKey }}
           
       - name: "Use projectKey"
         run: echo "The projectKey is ${{ steps.import-to-xray.outputs.projectKey }}"
         
+      - name: "Use testExecKey"
+        run: echo "The testExecKey is ${{ steps.import-to-xray.outputs.testExecKey }}"
+        
       - name: "Use testPlanKey"
-        run: echo "The testPlanKey is ${{ steps.import-to-xray.outputs.testExecKey }}"  
+        run: echo "The testPlanKey is ${{ steps.set-inputs.outputs.testPlanKey }}"  
  
