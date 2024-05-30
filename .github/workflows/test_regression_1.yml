@@ -71,15 +71,6 @@ jobs:
                 { "name": "${{ matrix.Plan }}" }
               ],
               "labels": ["ocultar"]
-            },
-            "fields": {
-              "summary": "Test",
-              "issuetype": { "id": "10005" },
-              "components": [
-                { "name": "Test" },
-                { "name": "Test" }
-              ],
-              "labels": ["ocultar"]
             }
           }' > test_execution.json
           
