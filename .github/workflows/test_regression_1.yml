@@ -72,6 +72,17 @@ jobs:
               ],
               "labels": ["ocultar"]
             }
+          },
+          {
+            "fields": {
+              "summary": "",
+              "issuetype": { "id": "10005" },
+              "components": [
+                { "name": "${{ matrix.Plan }}" },
+                { "name": "${{ matrix.Plan }}" }
+              ],
+              "labels": ["ocultar"]
+            }
           }' > test_execution.json
           
       - name: Print and Set Inputs
@@ -94,7 +105,7 @@ jobs:
           testExecutionJson: "./test_execution.json"
           
       - name: "Use projectKey"
-        run: echo "The projectKey is ${{ steps.import-to-xray.outputs.projectKey }}"
+        run: echo "The projectKey is ${{ github.event.inputs.projectKey }}"
         
       - name: "Use testExecKey"
         run: echo "The testExecKey is ${{ steps.import-to-xray.outputs.testExecKey }}"
