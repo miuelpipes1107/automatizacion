@@ -74,6 +74,20 @@ jobs:
             }
           }' > test_execution.json
           
+      - name: Create test execution JSON1
+        run: |
+          echo '{
+            "fields": {
+              "summary": "",
+              "issuetype": { "id": "10005" },
+              "components": [
+                { "name": "${{ matrix.Plan }}" },
+                { "name": "${{ matrix.Plan }}" }
+              ],
+              "labels": ["ocultar"]
+            }
+          }' > test_execution1.json    
+          
       - name: Print and Set Inputs
         id: set-inputs
         run: |
@@ -92,6 +106,7 @@ jobs:
           projectKey: ${{ github.event.inputs.projectKey }}
           testPlanKey: ${{ steps.set-inputs.outputs.testPlanKey }}
           testExecutionJson: "./test_execution.json"
+          testJson: "./test_execution1.json"
           
       - name: "Use projectKey"
         run: echo "The projectKey is ${{ github.event.inputs.projectKey }}"

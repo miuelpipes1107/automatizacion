@@ -130,17 +130,17 @@
             <artifactId>slf4j-simple</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>app.getxray</groupId>
             <artifactId>xray-junit-extensions</artifactId>
-            <version>0.7.1</version>
+            <version>0.7.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>app.getxray</groupId>
             <artifactId>xray-maven-plugin</artifactId>
             <version>0.7.3</version>
-        </dependency>           
+        </dependency>-->           
     </dependencies>
 
     <!-- Build segment for executing local tests. -->
