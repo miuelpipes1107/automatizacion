@@ -1,9 +1,9 @@
 
 package ink_testing_source.login;
 
-import app.getxray.xray.junit.customjunitxml.XrayTestReporter;
-import app.getxray.xray.junit.customjunitxml.XrayTestReporterParameterResolver;
-import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
+//import app.getxray.xray.junit.customjunitxml.XrayTestReporter;
+//import app.getxray.xray.junit.customjunitxml.XrayTestReporterParameterResolver;
+//import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
 import app.getxray.xray.junit.customjunitxml.annotations.XrayTest;
 import ink_testing_source.configuration.browser_manager;
 import ink_testing_source.configuration.method_after_before;
@@ -39,7 +39,7 @@ public class login extends method_after_before {
   }
   
   @Test
-  @XrayTest(description = "Loguea")
+  @XrayTest(description = "se Loguea")
   public static void t02_enter_data_login() throws MalformedURLException
   {      
      Wait = new WebDriverWait(browser_manager.web_driver_instace, 10);
