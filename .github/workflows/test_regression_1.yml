@@ -74,7 +74,7 @@ jobs:
             }
           }' > test_execution.json
           
-      - name: Create test execution JSON1
+      - name: Create test(case) JSON
         run: |
           echo '{
             "fields": {
@@ -115,5 +115,96 @@ jobs:
         run: echo "The testExecKey is ${{ steps.import-to-xray.outputs.testExecKey }}"
         
       - name: "Use testPlanKey"
-        run: echo "The testPlanKey is ${{ steps.set-inputs.outputs.testPlanKey }}"  
+        run: echo "The testPlanKey is ${{ steps.set-inputs.outputs.testPlanKey }}"
+        
+  job3:
+    needs: job1
+    name: Matrix2
+    runs-on: ubuntu-latest
+    container:
+      image: mavster/ubuntu:20.04-ff51-mvn
+      options: --user 0
+
+    strategy:
+      matrix:
+        Plan: [pnl2]
+
+    steps:
+        
+      - name: Checkout code
+        uses: actions/checkout@v3    
+          
+      - name: Compile and package our project
+        run: |
+          export DISPLAY=:99
+          Xvfb $DISPLAY -screen 0 1920x1080x16 -ac &
+          export DISPLAY=:99
+          export NSS_USE_SHARED_DB=ENABLED
+          export $(dbus-launch)
+          export NSS_USE_SHARED_DB=ENABLED
+          mvn -Dmaven.test.failure.ignore=true test -Dsurefire.suiteXmlFiles=$ROUTE/${{ matrix.Plan }}.xml | tee test_results.txt
+
+      - name: Listar archivos en el directorio 'aws/'
+        run: ls -la xray/
+        
+      - name: Install curl
+        run: |
+          apt-get update && apt-get install -y curl jq
+      
+      - name: Create test execution JSON
+        run: |
+          echo '{
+            "fields": {
+              "summary": "Test github ${{ matrix.Plan }}",
+              "issuetype": { "id": "10008" },
+              "components": [
+                { "name": "${{ matrix.Plan }}" },
+                { "name": "${{ matrix.Plan }}" }
+              ],
+              "labels": ["ocultar"]
+            }
+          }' > test_execution.json
+          
+      - name: Create test(case) JSON
+        run: |
+          echo '{
+            "fields": {
+              "summary": "",
+              "issuetype": { "id": "10005" },
+              "components": [
+                { "name": "${{ matrix.Plan }}" },
+                { "name": "${{ matrix.Plan }}" }
+              ],
+              "labels": ["ocultar"]
+            }
+          }' > test_execution1.json    
+          
+      - name: Print and Set Inputs
+        id: set-inputs
+        run: |
+          echo "Project ID: ${{ github.event.inputs.projectKey }}"
+          echo "testPlanKey ID: ${{ github.event.inputs.testExecKey }}"
+          echo "::set-output name=testPlanKey::${{ github.event.inputs.testExecKey }}"              
+           
+      - name: "Import results to Xray"
+        id: import-to-xray
+        uses: mikepenz/xray-action@v3.0.4
+        with:
+          username: ${{ secrets.XRAY_CLIENT_ID }}
+          password: ${{ secrets.XRAY_CLIENT_SECRET }}
+          testFormat: "junit"
+          testPaths: "**/target/surefire-reports/*.xml"          
+          projectKey: ${{ github.event.inputs.projectKey }}
+          testPlanKey: ${{ steps.set-inputs.outputs.testPlanKey }}
+          testExecutionJson: "./test_execution.json"
+          testJson: "./test_execution1.json"
+          
+      - name: "Use projectKey"
+        run: echo "The projectKey is ${{ github.event.inputs.projectKey }}"
+        
+      - name: "Use testExecKey"
+        run: echo "The testExecKey is ${{ steps.import-to-xray.outputs.testExecKey }}"
+        
+      - name: "Use testPlanKey"
+        run: echo "The testPlanKey is ${{ steps.set-inputs.outputs.testPlanKey }}"      
  

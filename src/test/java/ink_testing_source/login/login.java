@@ -1,10 +1,6 @@
 
 package ink_testing_source.login;
 
-//import app.getxray.xray.junit.customjunitxml.XrayTestReporter;
-//import app.getxray.xray.junit.customjunitxml.XrayTestReporterParameterResolver;
-//import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
-//import app.getxray.xray.junit.customjunitxml.annotations.XrayTest;
 import ink_testing_source.configuration.browser_manager;
 import ink_testing_source.configuration.method_after_before;
 import java.awt.AWTException;

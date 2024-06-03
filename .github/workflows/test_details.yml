@@ -81,6 +81,20 @@ jobs:
         run: |
           ls -la xray/
           
+      - name: Create test(case) JSON
+        run: |
+          echo '{
+            "fields": {
+              "summary": "",
+              "issuetype": { "id": "10005" },
+              "components": [
+                { "name": "${{ matrix.Plan }}" },
+                { "name": "${{ matrix.Plan }}" }
+              ],
+              "labels": ["ocultar"]
+            }
+          }' > test_execution1.json    
+          
       - name: "Import results to Xray"
         uses: mikepenz/xray-action@v3.0.4
         with:
@@ -88,8 +102,6 @@ jobs:
           password: ${{ secrets.XRAY_CLIENT_SECRET }}
           testFormat: "junit"
           testPaths: "**/target/surefire-reports/*.xml"
-          testExecKey: "A3-33"
-          projectKey: "A3"
-          
-          
-#          testPaths: "**/target/surefire-reports/*.xml"
+          testExecKey: ${{ github.event.inputs.testExecKey }}
+          projectKey: ${{ github.event.inputs.projectKey }}
+          testJson: "./test_execution1.json"

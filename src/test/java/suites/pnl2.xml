@@ -5,9 +5,9 @@
 It specifies a suite named "ink_automation" with a test named "validation_users"
 and the test includes one class-->
 <suite name="ink_automation" time-out="60000" verbose="1">
-    <test name="pnl">
-        <classes>             
-            <class name="ink_testing_source.pnl.pnl"/>
+    <test name="pnl2">
+        <classes>
+            <class name="ink_testing_source.pnl.pnl2"/>
         </classes> 
     </test>
 </suite>

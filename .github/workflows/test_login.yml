@@ -87,7 +87,21 @@ jobs:
       
       - name: Listar archivos en el directorio 'aws/'
         run: |
-          ls -la xray/
+          ls -la xray/        
+      
+      - name: Create test(case) JSON
+        run: |
+          echo '{
+            "fields": {
+              "summary": "",
+              "issuetype": { "id": "10005" },
+              "components": [
+                { "name": "${{ matrix.Plan }}" },
+                { "name": "${{ matrix.Plan }}" }
+              ],
+              "labels": ["ocultar"]
+            }
+          }' > test_execution1.json    
           
       - name: "Import results to Xray"
         uses: mikepenz/xray-action@v3.0.4
@@ -98,3 +112,4 @@ jobs:
           testPaths: "**/target/surefire-reports/*.xml"
           testExecKey: ${{ github.event.inputs.testExecKey }}
           projectKey: ${{ github.event.inputs.projectKey }}
+          testJson: "./test_execution1.json"
