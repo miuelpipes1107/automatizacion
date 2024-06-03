@@ -81,6 +81,19 @@ jobs:
         run: |
           ls -la xray/
           
+      - name: Create test execution JSON
+        run: |
+          echo '{
+            "fields": {
+              "summary": "",
+              "issuetype": { "id": "10008" },
+              "components": [
+                { "name": "${{ matrix.Plan }}" },
+                { "name": "${{ matrix.Plan }}" }
+              ]
+            }
+          }' > test_execution.json    
+          
       - name: Create test(case) JSON
         run: |
           echo '{
@@ -104,4 +117,5 @@ jobs:
           testPaths: "**/target/surefire-reports/*.xml"
           testExecKey: ${{ github.event.inputs.testExecKey }}
           projectKey: ${{ github.event.inputs.projectKey }}
+          testExecutionJson: "./test_execution.json"
           testJson: "./test_execution1.json"
