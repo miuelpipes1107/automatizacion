@@ -117,5 +117,5 @@ jobs:
           testPaths: "**/target/surefire-reports/*.xml"
           testExecKey: ${{ github.event.inputs.testExecKey }}
           projectKey: ${{ github.event.inputs.projectKey }}
-          testExecutionJson: "./test_execution.json"
+          testExecutionJson: "./test_execution1.json"
           testJson: "./test_execution1.json"
