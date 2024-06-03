@@ -102,6 +102,6 @@ jobs:
           password: ${{ secrets.XRAY_CLIENT_SECRET }}
           testFormat: "junit"
           testPaths: "**/target/surefire-reports/*.xml"
+          testJson: "./test_execution1.json"
           testExecKey: ${{ github.event.inputs.testExecKey }}
           projectKey: ${{ github.event.inputs.projectKey }}
-          testJson: "./test_execution1.json"
