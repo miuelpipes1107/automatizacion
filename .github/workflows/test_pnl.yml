@@ -85,7 +85,7 @@ jobs:
         run: |
           echo '{
             "fields": {
-              "summary": "",
+              "summary": "${{ matrix.Plan }}",
               "issuetype": { "id": "10008" },
               "components": [
                 { "name": "${{ matrix.Plan }}" },
