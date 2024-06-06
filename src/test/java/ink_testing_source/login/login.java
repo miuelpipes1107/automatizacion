@@ -18,7 +18,7 @@ import recording_test.test_listener;
  */
 public class login extends method_after_before {
     
-  public static By user=By.id("m_login_emai");
+  public static By user=By.id("m_login_ema");
   public static By password=By.id("m_login_password");
   public static WebDriverWait Wait;
   @AfterClass
