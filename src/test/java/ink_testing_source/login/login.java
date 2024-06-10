@@ -3,6 +3,7 @@ package ink_testing_source.login;
 
 import ink_testing_source.configuration.browser_manager;
 import ink_testing_source.configuration.method_after_before;
+import io.qameta.allure.TmsLink;
 import java.awt.AWTException;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -29,12 +30,14 @@ public class login extends method_after_before {
   }
     
   @Test
+  @TmsLink("T-01")
   public static void t01_open_browser_login() throws MalformedURLException
   {
     browser_manager.open_browser();    
   }
   
   @Test
+  @TmsLink("T-02")
   public static void t02_enter_data_login() throws MalformedURLException
   {      
      Wait = new WebDriverWait(browser_manager.web_driver_instace, 10);
