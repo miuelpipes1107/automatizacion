@@ -31,14 +31,14 @@ public class login extends method_after_before {
   }
     
   @Test
-  @Issue("AUT-8")
+  @TmsLink("AUT-8")
   public static void t01_open_browser_login() throws MalformedURLException
   {
     browser_manager.open_browser();    
   }
   
   @Test
-  @Issue("AUT-10")
+  @TmsLink("AUT-10")
   public static void t02_enter_data_login() throws MalformedURLException
   {      
      Wait = new WebDriverWait(browser_manager.web_driver_instace, 10);
