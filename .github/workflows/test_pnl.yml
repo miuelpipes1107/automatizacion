@@ -106,13 +106,22 @@ jobs:
           testExecKey: ${{ github.event.inputs.testExecKey }}
           projectKey: ${{ github.event.inputs.projectKey }}
           
-      - name: "allure-framework/setup-allurectl@v1"    
-        uses: allure-framework/setup-allurectl@v1
-        with: 
-          allure-endpoint: ${{ secrets.ALLURE_SERVER_URL }}
-          allure-token: ${{ secrets.ALLURE_API_TOKEN }}
-          allure-project-id: ${{ secrets.ALLURE_PROJECT_ID }}
+#      - name: "allure-framework/setup-allurectl@v1"    
+#        uses: allure-framework/setup-allurectl@v1
+#        with: 
+#          allure-endpoint: ${{ secrets.ALLURE_SERVER_URL }}
+#          allure-token: ${{ secrets.ALLURE_API_TOKEN }}
+#          allure-project-id: ${{ secrets.ALLURE_PROJECT_ID }}
+      
+      - name: Install dependencies
+        run: |
+          apt-get update && apt-get install -y curl unzip   
           
-#      - name: Upload Allure results to Allure TestOps
-#        run: |
-#          allurectl upload --project-id ${{ secrets.ALLURE_PROJECT_ID }} --results-path ./xray    
+      # New steps to upload Allure results to Allure TestOps
+      - name: Install Allure TestOps CLI
+        run: |
+          curl -sLo allurectl.tar.gz https://github.com/allure-framework/allurectl/releases/latest/download/allurectl-linux.tar.gz
+          tar -xzf allurectl.tar.gz -C /usr/local/bin/
+          chmod +x /usr/local/bin/allurectl
+          /usr/local/bin/allurectl login --uri ${{ secrets.ALLURE_SERVER_URL }} --token ${{ secrets.ALLURE_API_TOKEN }}
+          /usr/local/bin/allurectl upload --project-id ${{ secrets.ALLURE_PROJECT_ID }} --results-path ./xray
