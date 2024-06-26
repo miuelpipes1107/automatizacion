@@ -114,6 +114,10 @@ jobs:
           projectKey: ${{ github.event.inputs.projectKey }}
           testJson: "./test_execution1.json"
           
+      - name: Install dependencies
+        run: |
+          apt-get update && apt-get install -y curl sudo    
+          
       # New steps to upload Allure results to Allure TestOps
       - name: Install Allure TestOps CLI
         run: |
