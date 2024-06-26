@@ -118,7 +118,7 @@ jobs:
         uses: allure-framework/setup-allurectl@v1
         with: 
           allure-endpoint: ${{ secrets.ALLURE_SERVER_URL }}
-          allure-token: ${{ secret.ALLURE_API_TOKEN }}
+          allure-token: ${{ secrets.ALLURE_API_TOKEN }}
           allure-project-id: ${{ secrets.ALLURE_PROJECT_ID }}
       - run: allurectl watch -- ./gradlew clean test
         env: 
