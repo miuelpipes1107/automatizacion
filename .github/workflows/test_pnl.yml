@@ -116,17 +116,4 @@ jobs:
           
       - name: Upload Allure results to Allure TestOps
         run: |
-          /__t/allurectl/2.15.4/amd64/allurectl upload ./xray --project-id ${{ secrets.ALLURE_PROJECT_ID }}    
-      
-#      - name: Install dependencies
-#        run: |
-#          apt-get update && apt-get install -y curl unzip   
-#          
-#      # New steps to upload Allure results to Allure TestOps
-#      - name: Install Allure TestOps CLI
-#        run: |
-#          curl -sLo allurectl.tar.gz https://github.com/allure-framework/allurectl/releases/latest/download/allurectl-linux.tar.gz
-#          tar -xzf allurectl.tar.gz -C /usr/local/bin/
-#          chmod +x /usr/local/bin/allurectl
-#          /usr/local/bin/allurectl login --uri ${{ secrets.ALLURE_SERVER_URL }} --token ${{ secrets.ALLURE_API_TOKEN }}
-#          /usr/local/bin/allurectl upload --project-id ${{ secrets.ALLURE_PROJECT_ID }} --results-path ./xray
+          /__t/allurectl/2.15.4/amd64/allurectl upload ./xray --project-id ${{ secrets.ALLURE_PROJECT_ID }}
