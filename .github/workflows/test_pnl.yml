@@ -112,10 +112,11 @@ jobs:
           allure-endpoint: ${{ secrets.ALLURE_SERVER_URL }}
           allure-token: ${{ secrets.ALLURE_API_TOKEN }}
           allure-project-id: ${{ secrets.ALLURE_PROJECT_ID }}
+          allurectl-version: 2.15.4
           
       - name: Upload Allure results to Allure TestOps
         run: |
-          /usr/local/bin/allurectl upload --project-id ${{ secrets.ALLURE_PROJECT_ID }} --results-path ./xray    
+          /__t/allurectl/2.15.4/amd64/allurectl upload --project-id ${{ secrets.ALLURE_PROJECT_ID }} --results-path ./xray    
       
 #      - name: Install dependencies
 #        run: |
