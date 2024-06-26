@@ -113,6 +113,6 @@ jobs:
           allure-token: ${{ secrets.ALLURE_API_TOKEN }}
           allure-project-id: ${{ secrets.ALLURE_PROJECT_ID }}
           
-      - name: Upload Allure results to Allure TestOps
-        run: |
-          allurectl upload --project-id ${{ secrets.ALLURE_PROJECT_ID }} --results-path ./xray    
+#      - name: Upload Allure results to Allure TestOps
+#        run: |
+#          allurectl upload --project-id ${{ secrets.ALLURE_PROJECT_ID }} --results-path ./xray    
