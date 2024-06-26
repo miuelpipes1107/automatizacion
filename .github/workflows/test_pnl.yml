@@ -105,3 +105,13 @@ jobs:
           testJson: "./test_execution1.json"
           testExecKey: ${{ github.event.inputs.testExecKey }}
           projectKey: ${{ github.event.inputs.projectKey }}
+          
+      - name: "allure-framework/setup-allurectl@v1"    
+        uses: allure-framework/setup-allurectl@v1
+        with: 
+          allure-endpoint: ${{ secrets.ALLURE_SERVER_URL }}
+          allure-token: ${{ secrets.ALLURE_API_TOKEN }}
+          allure-project-id: ${{ secrets.ALLURE_PROJECT_ID }}
+      - run: allurectl watch -- ./gradlew clean test
+        env: 
+          ALLURE_RESULTS: build/xray    
