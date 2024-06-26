@@ -113,3 +113,17 @@ jobs:
           testExecKey: ${{ github.event.inputs.testExecKey }}
           projectKey: ${{ github.event.inputs.projectKey }}
           testJson: "./test_execution1.json"
+          
+      # New steps to upload Allure results to Allure TestOps
+      - name: Install Allure TestOps CLI
+        run: |
+          curl -sL https://dl.qameta.io/allurectl/linux/latest | sudo tee /usr/local/bin/allurectl > /dev/null
+          sudo chmod +x /usr/local/bin/allurectl    
+      
+      - name: Authenticate with Allure TestOps
+        run: |
+          allurectl login --uri ${{ secrets.ALLURE_SERVER_URL }} --token ${{ secrets.ALLURE_API_TOKEN }}
+          
+      - name: Upload Allure results to Allure TestOps
+        run: |
+          allurectl upload --project-id ${{ secrets.ALLURE_PROJECT_ID }} --results-path ./xray    
