@@ -124,14 +124,14 @@ jobs:
           curl -sL https://dl.qameta.io/allurectl/latest/allurectl-linux -o /usr/local/bin/allurectl
           chmod +x /usr/local/bin/allurectl
           
-      - name: Debug Authentication
-        run: |
-          echo "Allure TestOps Server URL: ${{ secrets.ALLURE_SERVER_URL }}"
-          echo "Allure TestOps API Token: ${{ secrets.ALLURE_API_TOKEN }}"    
-      
-      - name: Authenticate with Allure TestOps
-        run: |
-          allurectl login --uri ${{ secrets.ALLURE_SERVER_URL }} --token ${{ secrets.ALLURE_API_TOKEN }}
+#      - name: Debug Authentication
+#        run: |
+#          echo "Allure TestOps Server URL: ${{ secrets.ALLURE_SERVER_URL }}"
+#          echo "Allure TestOps API Token: ${{ secrets.ALLURE_API_TOKEN }}"    
+#      
+#      - name: Authenticate with Allure TestOps
+#        run: |
+#          allurectl login --uri ${{ secrets.ALLURE_SERVER_URL }} --token ${{ secrets.ALLURE_API_TOKEN }}
           
       - name: Upload Allure results to Allure TestOps
         run: |
