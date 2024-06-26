@@ -132,6 +132,6 @@ jobs:
 #          allurectl login --uri ${{ secrets.ALLURE_SERVER_URL }} --token ${{ secrets.ALLURE_API_TOKEN }}
           
           
-#      - name: Upload Allure results to Allure TestOps
-#        run: |
-#          allurectl upload --project-id ${{ secrets.ALLURE_PROJECT_ID }} --results-path ./xray    
+      - name: Upload Allure results to Allure TestOps
+        run: |
+          allurectl upload --project-id ${{ secrets.ALLURE_PROJECT_ID }} --results-path ./xray    
