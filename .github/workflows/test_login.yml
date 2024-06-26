@@ -122,7 +122,12 @@ jobs:
       - name: Install Allure TestOps CLI
         run: |
           curl -sL https://dl.qameta.io/allurectl/linux/latest | sudo tee /usr/local/bin/allurectl > /dev/null
-          sudo chmod +x /usr/local/bin/allurectl    
+          sudo chmod +x /usr/local/bin/allurectl
+          
+      - name: Debug Authentication
+        run: |
+          echo "Allure TestOps Server URL: ${{ secrets.ALLURE_SERVER_URL }}"
+          echo "Allure TestOps API Token: ${{ secrets.ALLURE_API_TOKEN }}"    
       
       - name: Authenticate with Allure TestOps
         run: |
