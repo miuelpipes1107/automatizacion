@@ -116,13 +116,13 @@ jobs:
           
       - name: Install dependencies
         run: |
-          apt-get update && apt-get install -y curl sudo    
+          apt-get update && apt-get install -y curl    
           
       # New steps to upload Allure results to Allure TestOps
       - name: Install Allure TestOps CLI
         run: |
-          curl -sL https://dl.qameta.io/allurectl/linux/latest | sudo tee /usr/local/bin/allurectl > /dev/null
-          sudo chmod +x /usr/local/bin/allurectl
+          curl -sL https://dl.qameta.io/allurectl/latest/allurectl-linux -o /usr/local/bin/allurectl
+          chmod +x /usr/local/bin/allurectl
           
       - name: Debug Authentication
         run: |
