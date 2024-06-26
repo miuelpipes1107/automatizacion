@@ -112,6 +112,7 @@ jobs:
           allure-endpoint: ${{ secrets.ALLURE_SERVER_URL }}
           allure-token: ${{ secrets.ALLURE_API_TOKEN }}
           allure-project-id: ${{ secrets.ALLURE_PROJECT_ID }}
-      - run: allurectl watch -- ./gradlew clean test
-        env: 
-          ALLURE_RESULTS: build/xray    
+          
+      - name: Upload Allure results to Allure TestOps
+        run: |
+          allurectl upload --project-id ${{ secrets.ALLURE_PROJECT_ID }} --results-path ./xray    
