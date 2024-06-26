@@ -114,17 +114,26 @@ jobs:
           projectKey: ${{ github.event.inputs.projectKey }}
           testJson: "./test_execution1.json"
           
-      - name: Install dependencies
-        run: |
-          apt-get update && apt-get install -y curl    
+      - uses: allure-framework/setup-allurectl@v1
+        with: 
+          allure-endpoint: ${{ secrets.ALLURE_SERVER_URL }}
+          allure-token: ${{ secret.ALLURE_API_TOKEN }}
+          allure-project-id: ${{ secrets.ALLURE_PROJECT_ID }}
+      - run: allurectl watch -- ./gradlew clean test
+        env: 
+          ALLURE_RESULTS: build/xray    
           
-      # New steps to upload Allure results to Allure TestOps
-      - name: Install Allure TestOps CLI
-        run: |
-          curl -sL https://dl.qameta.io/allurectl/latest/allurectl-linux -o /usr/local/bin/allurectl
-          chmod +x /usr/local/bin/allurectl
-          /usr/local/bin/allurectl login --uri ${{ secrets.ALLURE_SERVER_URL }} --token ${{ secrets.ALLURE_API_TOKEN }}
-          /usr/local/bin/allurectl upload --project-id ${{ secrets.ALLURE_PROJECT_ID }} --results-path ./xray
+#      - name: Install dependencies
+#        run: |
+#          apt-get update && apt-get install -y curl    
+          
+#      # New steps to upload Allure results to Allure TestOps
+#      - name: Install Allure TestOps CLI
+#        run: |
+#          curl -sL https://dl.qameta.io/allurectl/latest/allurectl-linux -o /usr/local/bin/allurectl
+#          chmod +x /usr/local/bin/allurectl
+#          /usr/local/bin/allurectl login --uri ${{ secrets.ALLURE_SERVER_URL }} --token ${{ secrets.ALLURE_API_TOKEN }}
+#          /usr/local/bin/allurectl upload --project-id ${{ secrets.ALLURE_PROJECT_ID }} --results-path ./xray
    
 #      - name: Authenticate with Allure TestOps
 #        run: |
