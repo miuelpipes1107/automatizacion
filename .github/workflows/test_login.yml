@@ -113,8 +113,9 @@ jobs:
           testExecKey: ${{ github.event.inputs.testExecKey }}
           projectKey: ${{ github.event.inputs.projectKey }}
           testJson: "./test_execution1.json"
-          
-      - uses: allure-framework/setup-allurectl@v1
+      
+      - name: "allure-framework/setup-allurectl@v1"    
+        uses: allure-framework/setup-allurectl@v1
         with: 
           allure-endpoint: ${{ secrets.ALLURE_SERVER_URL }}
           allure-token: ${{ secret.ALLURE_API_TOKEN }}
