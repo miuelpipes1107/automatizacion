@@ -3,6 +3,7 @@ package ink_testing_source.login;
 
 import ink_testing_source.configuration.browser_manager;
 import ink_testing_source.configuration.method_after_before;
+import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Issue;
 import io.qameta.allure.TmsLink;
@@ -34,12 +35,14 @@ public class login extends method_after_before {
   @Test
   public static void t01_open_browser_login() throws MalformedURLException
   {
+    Allure.label("jira-prod", "AUT-8");
     browser_manager.open_browser();    
   }
   
   @Test
   public static void t02_enter_data_login() throws MalformedURLException
-  {      
+  {  
+     Allure.label("jira-prod", "AUT-10"); 
      Wait = new WebDriverWait(browser_manager.web_driver_instace, 10);
      browser_manager.web_driver_instace.findElement(user).sendKeys("usuario");
      browser_manager.web_driver_instace.findElement(password).sendKeys("123");
