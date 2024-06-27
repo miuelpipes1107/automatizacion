@@ -5,8 +5,11 @@ import ink_testing_source.configuration.browser_manager;
 import ink_testing_source.configuration.method_after_before;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
 import io.qameta.allure.Issue;
+import io.qameta.allure.Story;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.testng.Tag;
 import java.awt.AWTException;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -33,6 +36,9 @@ public class login extends method_after_before {
   }
     
   @Test
+  @Tag("Critical")
+  @Story("External open_browser_login")
+  @Feature("open_browser_login")
   public static void t01_open_browser_login() throws MalformedURLException
   {
     Allure.label("jira-prod", "AUT-8");
@@ -40,6 +46,9 @@ public class login extends method_after_before {
   }
   
   @Test
+  @Tag("Critical")
+  @Story("External enter_data_login")
+  @Feature("enter_data_login")
   public static void t02_enter_data_login() throws MalformedURLException
   {  
      Allure.label("jira-prod", "AUT-10"); 
