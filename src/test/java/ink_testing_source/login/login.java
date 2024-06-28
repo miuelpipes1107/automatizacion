@@ -57,10 +57,6 @@ public class login extends method_after_before {
      Allure.label("jira-prod", "AUT-10"); 
      element_manager.textfield_set_text(user, text_user, "usuario");
      element_manager.textfield_set_text(password, text_password, "123");
-//     Wait = new WebDriverWait(browser_manager.web_driver_instace, 10);
-//     
-//     browser_manager.web_driver_instace.findElement(user).sendKeys("usuario");
-//     browser_manager.web_driver_instace.findElement(password).sendKeys("123");
   }
   
 }

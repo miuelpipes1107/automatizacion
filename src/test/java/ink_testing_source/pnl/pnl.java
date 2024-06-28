@@ -2,12 +2,12 @@
 package ink_testing_source.pnl;
 
 import ink_testing_source.configuration.browser_manager;
+import ink_testing_source.configuration.element_manager;
 import ink_testing_source.configuration.method_after_before;
 import java.awt.AWTException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 import recording_test.test_listener;
@@ -18,9 +18,11 @@ import recording_test.test_listener;
  */
 public class pnl extends method_after_before {
     
-  public static By user=By.id("m_login_email");
+  public static By user=By.id("m_login_ema");
+  public static String text_user ="User";
   public static By password=By.id("m_login_password");
-  public static WebDriverWait Wait;
+  public static String text_password="password";
+  
   @AfterClass
   @Override
   public void method_after_class() throws IOException, AWTException
@@ -37,9 +39,8 @@ public class pnl extends method_after_before {
   @Test
   public static void t02_enter_data_pnl() throws MalformedURLException
   {      
-     Wait = new WebDriverWait(browser_manager.web_driver_instace, 10);
-     browser_manager.web_driver_instace.findElement(user).sendKeys("usuario");
-     browser_manager.web_driver_instace.findElement(password).sendKeys("123");
+     element_manager.textfield_set_text(user, text_user, "usuario");
+     element_manager.textfield_set_text(password, text_password, "123");
   }
   
 }
