@@ -14,6 +14,9 @@ import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
@@ -31,6 +34,7 @@ public class test_listener implements ITestListener, IExecutionListener
   private static String status;
   public static String name_of_the_running_class;
   public static String name_server;
+  public static File screenshot;
 
   /**
    * Test listener class constructor. Initializes the custom screen recorder.
@@ -118,7 +122,7 @@ public class test_listener implements ITestListener, IExecutionListener
       case ITestResult.SUCCESS_PERCENTAGE_FAILURE ->
       {
         Allure.addAttachment(getTestMethodName(i_test_result), new ByteArrayInputStream(((TakesScreenshot) browser_manager.web_driver_instace)
-          .getScreenshotAs(OutputType.BYTES)));
+          .getScreenshotAs(OutputType.BYTES)));               
         status = "SUCCESS_PERCENTAGE_FAILURE";
         stop_screen_recording(false);
       }
@@ -197,6 +201,8 @@ public class test_listener implements ITestListener, IExecutionListener
       suite = get_class_context_name(context);
     }
 
+    name_server = browser_manager.get_name_server(configuration_server.SERVER);
+    
     String Zip_name = name_server + suite + screen_recorder.get_hours_date() + ".zip";
     test_listener.screen_recorder.file_copy_move();
     try
@@ -267,6 +273,12 @@ public class test_listener implements ITestListener, IExecutionListener
   {
     Allure.addAttachment(getTestMethodName(iTestResult), new ByteArrayInputStream(((TakesScreenshot) browser_manager.web_driver_instace)
       .getScreenshotAs(OutputType.BYTES)));
+    screenshot= ((TakesScreenshot) browser_manager.web_driver_instace).getScreenshotAs(OutputType.FILE);
+      try {
+          FileUtils.copyFile(screenshot, new File("xray/" + browser_manager.id_issue_xray + ".png"));
+      } catch (IOException ex) {
+          Logger.getLogger(test_listener.class.getName()).log(Level.SEVERE, null, ex);
+      }
     element_manager.debug_log(test_status(iTestResult));
   }
 

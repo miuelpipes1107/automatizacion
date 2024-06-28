@@ -117,3 +117,15 @@ jobs:
       - name: Upload Allure results to Allure TestOps
         run: |
           /__t/allurectl/2.15.4/amd64/allurectl upload ./xray --project-id ${{ secrets.ALLURE_PROJECT_ID }}
+          
+      - name: Attach screenshots to Xray issues
+        run: |
+          for file in target/screenshots/*; do
+            filename=$(basename -- "$file")
+            testCaseId="${filename%.png}"
+            curl -H "Authorization: Bearer ${{ secrets.XRAY_CLIENT_SECRET }}" \
+                 -F "file=@$file" \
+                 -F "testExecIssueKey=${{ github.event.inputs.testExecKey }}" \
+                 -F "testCaseKey=$testCaseId" \
+                 https://xray.cloud.getxray.app/api/v2/import/execution/xunit
+          done    

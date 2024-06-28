@@ -31,6 +31,7 @@ public class login extends method_after_before {
   public static By password=By.id("m_login_password");
   public static String text_password="password";
   public static WebDriverWait Wait;
+  
   @AfterClass
   @Override
   public void method_after_class() throws IOException, AWTException
@@ -44,7 +45,8 @@ public class login extends method_after_before {
 //  @Feature("open_browser_login")
   public static void t01_open_browser_login() throws MalformedURLException
   {
-    Allure.label("jira-prod", "AUT-8");
+    browser_manager.id_issue_xray="AUT-8";  
+    Allure.label("jira-prod",browser_manager.id_issue_xray );
     browser_manager.open_browser();    
   }
   
@@ -53,8 +55,9 @@ public class login extends method_after_before {
 //  @Story("External enter_data_login")
 //  @Feature("enter_data_login")
   public static void t02_enter_data_login() throws MalformedURLException
-  {  
-     Allure.label("jira-prod", "AUT-10"); 
+  {
+     browser_manager.id_issue_xray="AUT-10"; 
+     Allure.label("jira-prod", browser_manager.id_issue_xray); 
      element_manager.textfield_set_text(user, text_user, "usuario");
      element_manager.textfield_set_text(password, text_password, "123");
   }

@@ -30,6 +30,7 @@ public class browser_manager
   public static WebDriverWait wait;
   public static WebDriverWait wait_hidden;
   public static WebDriverWait wait_alert;
+  public static String id_issue_xray;
   
   /**
    * Opens the web browser and navigates to the login page. Initializes the
@@ -364,6 +365,69 @@ public class browser_manager
     InputStream is = p.getInputStream();
     BufferedReader br = new BufferedReader(new InputStreamReader(is));
     return br;
+  }
+  
+  /**
+   * returns the server name
+   *
+   * @param server:string - The input text.
+   * @return the server name
+   */
+  public static String get_name_server(String server)
+  {
+    String name_server = "";
+    try
+    {
+      if (server.contains("qa"))
+      {
+        name_server = "QA_";
+      }
+      else if (server.contains("uat"))
+      {
+        name_server = "UAT_";
+      }
+      else if (server.contains("sabre") || server.contains("staging-php8"))
+      {
+        name_server = "SABRE_";
+      }
+      else if (server.contains("rx-stg"))
+      {
+        name_server = "RX_STG_";
+      }
+      else if (server.contains("staging.inkcompute"))
+      {
+        name_server = "INKCOMPUTE_";
+      }
+      else if (server.contains("development"))
+      {
+        name_server = "DEVELOPMENT_";
+      }
+      else if (server.contains("inkstaging"))
+      {
+        name_server = "INKSTAGING_";
+      }
+      else if (server.contains("j21inkstgcent01"))
+      {
+        name_server = "J2LINKSTGCENT01_";
+      }
+      else if (server.contains("docker-web1"))
+      {
+        name_server = "DOCKER_WEB1_";
+      }
+      else if (server.contains("staging.radixxgo"))
+      {
+        name_server = "RADIXXGO_";
+      }
+      else
+      {
+        name_server = "DEVQA_";
+      }
+    }
+    catch (Exception e)
+    {
+      element_manager.assert_error(e.getMessage());
+    }
+    return name_server;
   }
 
 }
