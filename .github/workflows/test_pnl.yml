@@ -106,6 +106,10 @@ jobs:
           testExecKey: ${{ github.event.inputs.testExecKey }}
           projectKey: ${{ github.event.inputs.projectKey }}
           
+      - name: Install curl
+        run: |
+          apt-get update && apt-get install -y curl    
+          
       - name: "allure-framework/setup-allurectl@v1"    
         uses: allure-framework/setup-allurectl@v1
         with: 
