@@ -4,6 +4,7 @@ package ink_testing_source.pnl;
 import ink_testing_source.configuration.browser_manager;
 import ink_testing_source.configuration.element_manager;
 import ink_testing_source.configuration.method_after_before;
+import io.qameta.allure.Allure;
 import java.awt.AWTException;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -33,12 +34,14 @@ public class pnl extends method_after_before {
   @Test
   public static void t01_open_browser_pnl() throws MalformedURLException
   {
+    Allure.label("jira-prod", "AUT-12");  
     browser_manager.open_browser();    
   }
   
   @Test
   public static void t02_enter_data_pnl() throws MalformedURLException
-  {      
+  {
+     Allure.label("jira-prod", "AUT-14"); 
      element_manager.textfield_set_text(user, text_user, "usuario");
      element_manager.textfield_set_text(password, text_password, "123");
   }
