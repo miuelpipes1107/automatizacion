@@ -124,10 +124,10 @@ jobs:
           
       - name: Attach screenshots to Xray issues
         run: |
-          for file in target/screenshots/*; do
+          for file in xray/*.png; do
             filename=$(basename -- "$file")
             testCaseId="${filename%.*}"
-            curl -H "Authorization: Bearer ${{ secrets.XRAY_CLIENT_SECRET }}" \
+            curl -H "Authorization: Bearer ${{ secrets.XRAY_API_TOKEN }}" \
                  -F "file=@$file" \
                  -F "testExecIssueKey=${{ github.event.inputs.testExecKey }}" \
                  -F "testCaseKey=$testCaseId" \
