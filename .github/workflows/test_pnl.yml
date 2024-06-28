@@ -126,7 +126,7 @@ jobs:
         run: |
           for file in target/screenshots/*; do
             filename=$(basename -- "$file")
-            testCaseId="${filename%.png}"
+            testCaseId="${filename%.*}"
             curl -H "Authorization: Bearer ${{ secrets.XRAY_CLIENT_SECRET }}" \
                  -F "file=@$file" \
                  -F "testExecIssueKey=${{ github.event.inputs.testExecKey }}" \
