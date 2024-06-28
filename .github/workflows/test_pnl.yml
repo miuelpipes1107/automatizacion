@@ -122,14 +122,17 @@ jobs:
         run: |
           /__t/allurectl/2.15.4/amd64/allurectl upload ./xray --project-id ${{ secrets.ALLURE_PROJECT_ID }}
           
-      - name: Attach screenshots to Xray issues
+      - name: Attach screenshots to Jira issues
         run: |
           for file in xray/*.png; do
             filename=$(basename -- "$file")
-            testCaseId="${filename%.*}"
-            curl -H "Authorization: Bearer ${{ secrets.XRAY_CLIENT_SECRET }}" \
+            issueKey="${filename%.*}"
+            curl -X POST \
+                 -H "Authorization: Bearer ${{ secrets.JIRA_API_TOKEN }}" \
+                 -H "Content-Type: multipart/form-data" \
                  -F "file=@$file" \
-                 -F "testExecIssueKey=${{ github.event.inputs.testExecKey }}" \
-                 -F "testCaseKey=$testCaseId" \
-                 https://xray.cloud.getxray.app/api/v2/import/execution/xunit
-          done 
+                 "https://${{ secrets.JIRA_INSTANCE }}/rest/api/3/issue/$issueKey/attachments"
+          done
+        env:
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_INSTANCE: ${{ secrets.JIRA_INSTANCE }} 
