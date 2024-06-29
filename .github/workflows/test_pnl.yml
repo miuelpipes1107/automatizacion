@@ -122,17 +122,30 @@ jobs:
         run: |
           /__t/allurectl/2.15.4/amd64/allurectl upload ./xray --project-id ${{ secrets.ALLURE_PROJECT_ID }}
           
-      - name: Attach screenshots to Jira issues
-        run: |
-          for file in xray/*.png; do
-            filename=$(basename -- "$file")
-            issueKey="${filename%.*}"
-            curl -X POST \
-                 -H "Authorization: Bearer ${{ secrets.JIRA_API_TOKEN }}" \
-                 -H "Content-Type: multipart/form-data" \
-                 -F "file=@$file" \
-                 "https://${{ secrets.JIRA_INSTANCE }}/rest/api/3/issue/$issueKey/attachments"
-          done
+      - name: Login
+        uses: atlassian/gajira-login@master
         env:
-          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-          JIRA_INSTANCE: ${{ secrets.JIRA_INSTANCE }} 
+          JIRA_BASE_URL: ${{ secrets.JIRA_INSTANCE }}
+          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}    
+          
+#      - name: Add attachement to jira issue
+#        uses: z4ck404/jira-add-attachement@0.1.0
+#        with:
+#          issue: ${{ steps.create.outputs.issue }}
+#          attachmentFilePath: /path/to/attachement    
+          
+#      - name: Attach screenshots to Jira issues
+#        run: |
+#          for file in xray/*.png; do
+#            filename=$(basename -- "$file")
+#            issueKey="${filename%.*}"
+#            curl -X POST \
+#                 -H "Authorization: Bearer ${{ secrets.JIRA_API_TOKEN }}" \
+#                 -H "Content-Type: multipart/form-data" \
+#                 -F "file=@$file" \
+#                 "https://${{ secrets.JIRA_INSTANCE }}/rest/api/3/issue/$issueKey/attachments"
+#          done
+#        env:
+#          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+#          JIRA_INSTANCE: ${{ secrets.JIRA_INSTANCE }} 
