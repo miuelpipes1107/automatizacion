@@ -112,7 +112,8 @@ jobs:
           testPaths: "**/target/surefire-reports/*.xml"
           testExecKey: ${{ github.event.inputs.testExecKey }}
           projectKey: ${{ github.event.inputs.projectKey }}
-          testJson: "./test_execution1.json"    
+          testJson: "./test_execution1.json"
+          importParallelism: 10
           
       - name: "allure-framework/setup-allurectl@v1"    
         uses: allure-framework/setup-allurectl@v1
