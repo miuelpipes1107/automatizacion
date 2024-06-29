@@ -223,6 +223,11 @@ public class custom_screen_recorder extends ScreenRecorder
 
         movieFolder = new_file_destination;
 
+        if(!new_file_destination_xray.exists())
+        {
+            new_file_destination_xray.mkdirs();
+        }
+        
         if (!movieFolder.exists())
         {
           movieFolder.mkdirs();

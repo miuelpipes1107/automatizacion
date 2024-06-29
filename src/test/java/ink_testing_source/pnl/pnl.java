@@ -34,14 +34,16 @@ public class pnl extends method_after_before {
   @Test
   public static void t01_open_browser_pnl() throws MalformedURLException
   {
-    Allure.label("jira-prod", "AUT-12");  
+    browser_manager.id_issue_xray="AUT-12";  
+    Allure.label("jira-prod", browser_manager.id_issue_xray);  
     browser_manager.open_browser();    
   }
   
   @Test
   public static void t02_enter_data_pnl() throws MalformedURLException
   {
-     Allure.label("jira-prod", "AUT-14"); 
+     browser_manager.id_issue_xray="AUT-14"; 
+     Allure.label("jira-prod", browser_manager.id_issue_xray); 
      element_manager.textfield_set_text(user, text_user, "usuario");
      element_manager.textfield_set_text(password, text_password, "123");
   }
