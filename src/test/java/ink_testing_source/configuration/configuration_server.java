@@ -97,9 +97,9 @@ public class configuration_server
   
   // ================================== URLS ===================================
   
-//  public static final String JIRA_AT                                            = dotenv.get("AT");
-//  public static final String JIRA_USER_EMAIL                                    = dotenv.get("JIRA_USER_EMAIL");
-//  public static final String JIRA_URL = "https://miuelpipes1109.atlassian.net";
+  public static final String JIRA_API_TOKEN                                     = dotenv.get("AT");
+  public static final String JIRA_USER_EMAIL                                    = dotenv.get("JIRA_USER_EMAIL");
+  public static final String JIRA_URL                                           = "https://miuelpipes1109.atlassian.net";
   // ================================== LOGIN ==================================  
   /**
    * Login URL and home page URL
