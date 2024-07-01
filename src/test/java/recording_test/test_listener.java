@@ -20,6 +20,7 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
+import org.apache.commons.lang3.SystemUtils;
 import org.testng.*;
 
 /**
@@ -280,11 +281,15 @@ public class test_listener implements ITestListener, IExecutionListener
           Logger.getLogger(test_listener.class.getName()).log(Level.SEVERE, null, ex);
       }
       
-//      try {
-//          file_utils.attachFileToIssue(browser_manager.id_issue_xray, screenshot);
-//      } catch (IOException ex) {
-//          Logger.getLogger(test_listener.class.getName()).log(Level.SEVERE, null, ex);
-//      }
+      
+      if (SystemUtils.IS_OS_LINUX) {
+          try {
+              file_utils.attachFileToIssue(browser_manager.id_issue_xray, screenshot);
+          } catch (IOException ex) {
+              Logger.getLogger(test_listener.class.getName()).log(Level.SEVERE, null, ex);
+          }
+      }
+      
     element_manager.debug_log(test_status(iTestResult));
   }
 

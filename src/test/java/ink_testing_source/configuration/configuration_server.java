@@ -99,7 +99,7 @@ public class configuration_server
   
   public static final String JIRA_API_TOKEN                                     = dotenv.get("AT");
   public static final String JIRA_USER_EMAIL                                    = dotenv.get("JIRA_USER_EMAIL");
-  public static final String JIRA_URL                                           = "https://miuelpipes1109.atlassian.net";
+  public static final String JIRA_URL                                           = dotenv.get("JIRA_URL");
   // ================================== LOGIN ==================================  
   /**
    * Login URL and home page URL
