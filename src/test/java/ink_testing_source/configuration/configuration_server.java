@@ -97,7 +97,7 @@ public class configuration_server
   
   // ================================== URLS ===================================
   
-  public static final String JIRA_API_TOKEN                                     = dotenv.get("API_TOKEN");
+  public static final String JIRA_API_TOKEN                                     = dotenv.get("JIRA_API_TOKEN");
   public static final String JIRA_USER_EMAIL                                    = dotenv.get("JIRA_USER_EMAIL");
   public static final String JIRA_URL                                           = dotenv.get("JIRA_URL");
   // ================================== LOGIN ==================================  
