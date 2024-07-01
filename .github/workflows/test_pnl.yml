@@ -146,7 +146,7 @@ jobs:
                  -H "X-Atlassian-Token: no-check" \
                  -H "Content-Type: multipart/form-data" \
                  -F "file=@$file" \
-                 "${JIRA_INSTANCE}secure/attachment/$issueKey/$issueKey")
+                 "${JIRA_INSTANCE}rest/api/2/issue/$issueKey/attachments")
             if [ $response -eq 200 ]; then
               echo "Successfully attached $file to issue $issueKey"
             else

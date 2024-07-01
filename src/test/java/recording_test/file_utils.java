@@ -1,12 +1,22 @@
 package recording_test;
 
+import ink_testing_source.configuration.configuration_server;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import java.nio.charset.StandardCharsets;
+
 public class file_utils
 {
-
+    
   /**
    * Writes the lines of a list to a file, starting from a specified index.
    *
@@ -62,5 +72,30 @@ public class file_utils
     }
     return cadena;
   }
+  
+//    public static void attachFileToIssue(String issueKey, File file) throws IOException {
+//        CloseableHttpClient httpClient = HttpClients.createDefault();
+//
+//        String url = JIRA_URL + "/rest/api/2/issue/" + issueKey + "/attachments";
+//
+//        HttpPost httpPost = new HttpPost(url);
+//        httpPost.setHeader("X-Atlassian-Token", "no-check");
+//        String auth = JIRA_USER_EMAIL + ":" + configuration_server.JIRA_AT;
+//        byte[] encodedAuth = java.util.Base64.getEncoder().encode(auth.getBytes(StandardCharsets.ISO_8859_1));
+//        String authHeader = "Basic " + new String(encodedAuth);
+//        httpPost.setHeader("Authorization", authHeader);
+//
+//        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+//        builder.addBinaryBody("file", file, ContentType.APPLICATION_OCTET_STREAM, file.getName());
+//        httpPost.setEntity(builder.build());
+//
+//        HttpResponse response = httpClient.execute(httpPost);
+//        String responseString = EntityUtils.toString(response.getEntity());
+//
+//        System.out.println("Response Code: " + response.getStatusLine().getStatusCode());
+//        System.out.println("Response Body: " + responseString);
+//
+//        httpClient.close();
+//    }
 
 }

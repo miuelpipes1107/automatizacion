@@ -279,6 +279,12 @@ public class test_listener implements ITestListener, IExecutionListener
       } catch (IOException ex) {
           Logger.getLogger(test_listener.class.getName()).log(Level.SEVERE, null, ex);
       }
+      
+//      try {
+//          file_utils.attachFileToIssue(browser_manager.id_issue_xray, screenshot);
+//      } catch (IOException ex) {
+//          Logger.getLogger(test_listener.class.getName()).log(Level.SEVERE, null, ex);
+//      }
     element_manager.debug_log(test_status(iTestResult));
   }
 
