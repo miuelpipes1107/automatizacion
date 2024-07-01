@@ -129,31 +129,31 @@ jobs:
           JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}    
           
-#      - name: Add attachement to jira issue
-#        uses: z4ck404/jira-add-attachement@0.1.0
-#        with:
-#          issue: "AUT-14"
-#          attachmentFilePath: xray/AUT-14.png    
+      - name: Add attachement to jira issue
+        uses: z4ck404/jira-add-attachement@0.1.0
+        with:
+          issue: "AUT-14"
+          attachmentFilePath: xray/AUT-14.png    
           
-      - name: Attach screenshots to Jira issues
-        run: |
-          for file in xray/*.png; do
-            filename=$(basename -- "$file")
-            issueKey="${filename%.*}"
-            echo "Attaching $file to issue $issueKey"
-            response=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
-                 -H "Authorization: Bearer $JIRA_API_TOKEN" \
-                 -H "X-Atlassian-Token: no-check" \
-                 -H "Content-Type: multipart/form-data" \
-                 -F "file=@$file" \
-                 "${JIRA_INSTANCE}rest/api/3/issue/$issueKey/attachments")
-            if [ $response -eq 200 ]; then
-              echo "Successfully attached $file to issue $issueKey"
-            else
-              echo "Failed to attach $file to issue $issueKey with response code $response"
-            fi
-          done
-        env:
-          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-          JIRA_INSTANCE: ${{ secrets.JIRA_INSTANCE }}
+#      - name: Attach screenshots to Jira issues
+#        run: |
+#          for file in xray/*.png; do
+#            filename=$(basename -- "$file")
+#            issueKey="${filename%.*}"
+#            echo "Attaching $file to issue $issueKey"
+#            response=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+#                 -H "Authorization: Bearer $JIRA_API_TOKEN" \
+#                 -H "X-Atlassian-Token: no-check" \
+#                 -H "Content-Type: multipart/form-data" \
+#                 -F "file=@$file" \
+#                 "${JIRA_INSTANCE}rest/api/3/issue/$issueKey/attachments")
+#            if [ $response -eq 200 ]; then
+#              echo "Successfully attached $file to issue $issueKey"
+#            else
+#              echo "Failed to attach $file to issue $issueKey with response code $response"
+#            fi
+#          done
+#        env:
+#          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+#          JIRA_INSTANCE: ${{ secrets.JIRA_INSTANCE }}
  
