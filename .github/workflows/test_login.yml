@@ -115,23 +115,28 @@ jobs:
           testJson: "./test_execution1.json"
           importParallelism: 10
           
-      - name: Install curl
-        run: |
-          apt-get update && apt-get install -y curl    
+#      - name: Install curl
+#        run: |
+#          apt-get update && apt-get install -y curl    
           
-      - name: Query Jira Issue
+      - name: Login
+        uses: atlassian/gajira-login@master
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_INSTANCE }}
+          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+        
+      - name: JIRA JQL Query
+        id: jira-jql-query
+        uses: shamrat17/jira-jql-query@master
+        with:
+          jql: "text ~ 'ink_testing_source.pnl.pnl.t02_enter_data_pnl'"
+          fields: id,key,status
+          
+      - name: Print JIRA Query Results
         run: |
-          JIRA_URL="${{ secrets.JIRA_INSTANCE }}"
-          JIRA_USERNAME="${{ secrets.JIRA_USER_EMAIL }}"
-          JIRA_API_TOKEN="${{ secrets.JIRA_API_TOKEN }}"
-          ISSUE_DEFINITION="ink_testing_source.pnl.pnl.t02_enter_data_pnl"
-
-          # Consulta a la API de Jira usando  JQL
-          response=$(curl -svf -u $JIRA_USERNAME:$JIRA_API_TOKEN -X GET \
-            "$JIRA_URL/rest/api/3/search?jql=text ~ \"$ISSUE_DEFINITION\"")
-
-          echo "Response from Jira API:"
-          echo "$response"    
+          echo "Results from JIRA Query:"
+          echo "${{ steps.jira-query.outputs.output }}"    
           
 #      - name: "allure-framework/setup-allurectl@v1"    
 #        uses: allure-framework/setup-allurectl@v1
