@@ -128,7 +128,7 @@ jobs:
         
       - name: JIRA JQL Query
         id: jira-jql-query
-        uses: shamrat17/jira-jql-query@master
+        uses: shamrat17/jira-jql-query@v1
         with:
           jql: "text ~ 'ink_testing_source.pnl.pnl.t02_enter_data_pnl'"
           fields: id,key,status
