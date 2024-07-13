@@ -121,13 +121,13 @@ jobs:
           
       - name: Query Jira Issue
         run: |
-          JIRA_URL="https://miuelpipes1109.atlassian.net"
+          JIRA_URL="${{ secrets.JIRA_INSTANCE }}"
           JIRA_USERNAME="${{ secrets.JIRA_USER_EMAIL }}"
           JIRA_API_TOKEN="${{ secrets.JIRA_API_TOKEN }}"
           ISSUE_DEFINITION="ink_testing_source.pnl.pnl.t02_enter_data_pnl"
 
           # Consulta a la API de Jira usando JQL
-          response=$(curl -sS -u $JIRA_USERNAME:$JIRA_API_TOKEN -X GET \
+          response=$(curl -sSf -u $JIRA_USERNAME:$JIRA_API_TOKEN -X GET \
             "$JIRA_URL/rest/api/3/search?jql=text ~ \"$ISSUE_DEFINITION\"")
 
           echo "Response from Jira API:"
