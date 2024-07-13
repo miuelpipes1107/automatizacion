@@ -128,8 +128,7 @@ jobs:
           JIRA_BASE_URL: ${{ secrets.JIRA_INSTANCE }}
           JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-          
-      - name: Add attachement to jira issue   
+            
           
 #      - name: Add attachement to jira issue
 #        uses: z4ck404/jira-add-attachement@0.1.0
