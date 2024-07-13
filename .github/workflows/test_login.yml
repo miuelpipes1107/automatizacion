@@ -115,6 +115,10 @@ jobs:
           testJson: "./test_execution1.json"
           importParallelism: 10
           
+      - name: Install curl
+        run: |
+          apt-get update && apt-get install -y curl    
+          
       - name: Query Jira Issue
         run: |
           JIRA_URL="${{ secrets.JIRA_INSTANCE }}"
