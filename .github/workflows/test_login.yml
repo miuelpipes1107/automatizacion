@@ -115,14 +115,28 @@ jobs:
           testJson: "./test_execution1.json"
           importParallelism: 10
           
-      - name: "allure-framework/setup-allurectl@v1"    
-        uses: allure-framework/setup-allurectl@v1
-        with: 
-          allure-endpoint: ${{ secrets.ALLURE_SERVER_URL }}
-          allure-token: ${{ secrets.ALLURE_API_TOKEN }}
-          allure-project-id: ${{ secrets.ALLURE_PROJECT_ID }}
-          allurectl-version: 2.15.4
-          
-      - name: Upload Allure results to Allure TestOps
+      - name: Query Jira Issue
         run: |
-          /__t/allurectl/2.15.4/amd64/allurectl upload ./xray --project-id ${{ secrets.ALLURE_PROJECT_ID }}
+          JIRA_URL="${{ secrets.JIRA_INSTANCE }}"
+          JIRA_USERNAME="${{ secrets.JIRA_USER_EMAIL }}"
+          JIRA_API_TOKEN="${{ secrets.JIRA_API_TOKEN }}"
+          ISSUE_DEFINITION="ink_testing_source.pnl.pnl.t02_enter_data_pnl"
+
+          # Consulta a la API de Jira usando JQL
+          response=$(curl -sS -u $JIRA_USERNAME:$JIRA_API_TOKEN -X GET \
+            "$JIRA_URL/rest/api/3/search?jql=text ~ \"$ISSUE_DEFINITION\"")
+
+          echo "Response from Jira API:"
+          echo "$response"    
+          
+#      - name: "allure-framework/setup-allurectl@v1"    
+#        uses: allure-framework/setup-allurectl@v1
+#        with: 
+#          allure-endpoint: ${{ secrets.ALLURE_SERVER_URL }}
+#          allure-token: ${{ secrets.ALLURE_API_TOKEN }}
+#          allure-project-id: ${{ secrets.ALLURE_PROJECT_ID }}
+#          allurectl-version: 2.15.4
+#          
+#      - name: Upload Allure results to Allure TestOps
+#        run: |
+#          /__t/allurectl/2.15.4/amd64/allurectl upload ./xray --project-id ${{ secrets.ALLURE_PROJECT_ID }}

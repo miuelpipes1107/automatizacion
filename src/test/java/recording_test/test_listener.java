@@ -276,16 +276,18 @@ public class test_listener implements ITestListener, IExecutionListener
       .getScreenshotAs(OutputType.BYTES)));
     screenshot= ((TakesScreenshot) browser_manager.web_driver_instace).getScreenshotAs(OutputType.FILE);
       try {
-          FileUtils.copyFile(screenshot, new File("xray/" + browser_manager.id_issue_xray + ".png"));
+          int lastDotIndex = iTestResult.getInstanceName().lastIndexOf(".");
+          FileUtils.copyFile(screenshot, new File("xray/" + iTestResult.getInstanceName().substring(lastDotIndex+1)+
+                  "_"+getTestMethodName(iTestResult)+".png"));
       } catch (IOException ex) {
           Logger.getLogger(test_listener.class.getName()).log(Level.SEVERE, null, ex);
       }
       
-      try {
-          file_utils.attachFileToIssue(browser_manager.id_issue_xray, screenshot);
-      } catch (IOException ex) {
-          Logger.getLogger(test_listener.class.getName()).log(Level.SEVERE, null, ex);
-      }
+//      try {
+//          file_utils.attachFileToIssue(browser_manager.id_issue_xray, screenshot);
+//      } catch (IOException ex) {
+//          Logger.getLogger(test_listener.class.getName()).log(Level.SEVERE, null, ex);
+//      }
       
     element_manager.debug_log(test_status(iTestResult));
   }

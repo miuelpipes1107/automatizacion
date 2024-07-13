@@ -8,11 +8,16 @@ import java.util.List;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import java.nio.charset.StandardCharsets;
+import org.json.JSONObject;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 
 public class file_utils
 {
@@ -73,29 +78,70 @@ public class file_utils
     return cadena;
   }
   
-    public static void attachFileToIssue(String issueKey, File file) throws IOException {
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-
-        String url = configuration_server.JIRA_URL + "/rest/api/2/issue/" + issueKey + "/attachments";
-
-        HttpPost httpPost = new HttpPost(url);
-        httpPost.setHeader("X-Atlassian-Token", "no-check");
-        String auth = configuration_server.JIRA_USER_EMAIL + ":" + configuration_server.JIRA_API_TOKEN;
-        byte[] encodedAuth = java.util.Base64.getEncoder().encode(auth.getBytes(StandardCharsets.ISO_8859_1));
-        String authHeader = "Basic " + new String(encodedAuth);
-        httpPost.setHeader("Authorization", authHeader);
-
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-        builder.addBinaryBody("file", file, ContentType.APPLICATION_OCTET_STREAM, file.getName());
-        httpPost.setEntity(builder.build());
-
-        HttpResponse response = httpClient.execute(httpPost);
-        String responseString = EntityUtils.toString(response.getEntity());
-
-        System.out.println("Response Code: " + response.getStatusLine().getStatusCode());
-        System.out.println("Response Body: " + responseString);
-
-        httpClient.close();
-    }
+//    public static void attachFileToIssue(String issueKey, File file) throws IOException {
+//        CloseableHttpClient httpClient = HttpClients.createDefault();
+//
+//        String url = configuration_server.JIRA_URL + "/rest/api/2/issue/" + issueKey + "/attachments";
+//
+//        HttpPost httpPost = new HttpPost(url);
+//        httpPost.setHeader("X-Atlassian-Token", "no-check");
+//        String auth = configuration_server.JIRA_USER_EMAIL + ":" + configuration_server.JIRA_API_TOKEN;
+//        byte[] encodedAuth = java.util.Base64.getEncoder().encode(auth.getBytes(StandardCharsets.ISO_8859_1));
+//        String authHeader = "Basic " + new String(encodedAuth);
+//        httpPost.setHeader("Authorization", authHeader);
+//
+//        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+//        builder.addBinaryBody("file", file, ContentType.APPLICATION_OCTET_STREAM, file.getName());
+//        httpPost.setEntity(builder.build());
+//
+//        HttpResponse response = httpClient.execute(httpPost);
+//        String responseString = EntityUtils.toString(response.getEntity());
+//
+//        System.out.println("Response Code: " + response.getStatusLine().getStatusCode());
+//        System.out.println("Response Body: " + responseString);
+//
+//        httpClient.close();
+//    }
+//    
+//    public String authenticate() throws Exception {
+//        
+//        try (CloseableHttpClient client = HttpClients.createDefault()) {
+//            HttpPost post = new HttpPost(configuration_server.XRAY_AUTH_URL);
+//            post.setHeader("Content-Type", "application/json");
+//            
+//            JSONObject json = new JSONObject();
+//            json.put("client_id", configuration_server.CLIENT_ID_XRAY);
+//            json.put("client_secret", configuration_server.CLIENT_SECRET_XRAY);
+//            
+//            StringEntity entity = new StringEntity(json.toString());
+//            post.setEntity(entity);
+//
+//            return EntityUtils.toString(client.execute(post).getEntity());
+//        }
+//    }
+//    
+//    public String importResults(String resultsPath, String testExecKey, String projectKey) throws Exception {
+//        try (CloseableHttpClient client = HttpClients.createDefault()) {
+//            HttpPost post = new HttpPost(XRAY_IMPORT_URL);
+//            post.setHeader("Content-Type", "application/json");
+//            post.setHeader("Authorization", "Bearer " + token);
+//            
+//            String results = new String(Files.readAllBytes(Paths.get(resultsPath)));
+//
+//            JSONObject json = new JSONObject();
+//            json.put("testExecKey", testExecKey);
+//            json.put("projectKey", projectKey);
+//            json.put("results", results);
+//            
+//            StringEntity entity = new StringEntity(json.toString());
+//            post.setEntity(entity);
+//
+//            return EntityUtils.toString(client.execute(post).getEntity());
+//        }
+//    }
+    
+    
+    
+    
 
 }
