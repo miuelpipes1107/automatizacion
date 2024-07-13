@@ -126,17 +126,19 @@ jobs:
           JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
         
-      - name: JIRA JQL Query
-        id: jira-jql-query
-        uses: shamrat17/jira-jql-query@v1
+      - name: Query Jira using JQL
+        id: jira-query
+        uses: ./.github/workflows
         with:
-          jql: "text ~ 'ink_testing_source.pnl.pnl.t02_enter_data_pnl'"
-          fields: id,key,status
-          
+          jira-url: ${{ secrets.JIRA_INSTANCE }}
+          jira-username: ${{ secrets.JIRA_USERNAME }}
+          jira-api-token: ${{ secrets.JIRA_API_TOKEN }}
+          jql-query: "text ~ 'ink_testing_source.pnl.pnl.t02_enter_data_pnl'"
+
       - name: Print JIRA Query Results
         run: |
           echo "Results from JIRA Query:"
-          echo "${{ steps.jira-query.outputs.output }}"    
+          echo "${{ steps.jira-query.outputs.response }}"    
           
 #      - name: "allure-framework/setup-allurectl@v1"    
 #        uses: allure-framework/setup-allurectl@v1
