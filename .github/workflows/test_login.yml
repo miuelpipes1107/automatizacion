@@ -126,7 +126,7 @@ jobs:
           JIRA_API_TOKEN="${{ secrets.JIRA_API_TOKEN }}"
           ISSUE_DEFINITION="ink_testing_source.pnl.pnl.t02_enter_data_pnl"
 
-          # Consulta a la API de Jira usando JQL
+          # Consulta a la API de Jira usando  JQL
           response=$(curl -sSf -u $JIRA_USERNAME:$JIRA_API_TOKEN -X GET \
             "$JIRA_URL/rest/api/3/search?jql=text ~ \"$ISSUE_DEFINITION\"")
 
