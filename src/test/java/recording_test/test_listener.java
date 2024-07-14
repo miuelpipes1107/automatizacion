@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jira_xray.jira_xray;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -36,6 +37,7 @@ public class test_listener implements ITestListener, IExecutionListener
   public static String name_of_the_running_class;
   public static String name_server;
   public static File screenshot;
+  public static jira_xray jira_xray_issue;
 
   /**
    * Test listener class constructor. Initializes the custom screen recorder.
@@ -237,6 +239,18 @@ public class test_listener implements ITestListener, IExecutionListener
     {
       number_of_characters = 80;
       configuration_server.NAME_CASE = iTestResult.getName();
+      
+        jira_xray_issue = new jira_xray();
+        browser_manager.id_issue_xray = jira_xray_issue.search_issue_by_summary(configuration_server.NAME_CASE);
+        if (!browser_manager.id_issue_xray.equals("")) {
+            jira_xray_issue.issue_relationship(browser_manager.id_issue_xray);
+        } else {
+            jira_xray_issue.create_or_update_jira_issue(configuration_server.NAME_CASE, configuration_server.NAME_CASE, "10005","");
+            browser_manager.id_issue_xray = jira_xray_issue.search_issue_by_summary(configuration_server.NAME_CASE);
+            jira_xray_issue.issue_relationship(browser_manager.id_issue_xray);
+        }
+      
+      
       if (iTestResult.getMethod().getMethodName().length() < number_of_characters)
       {
         number_of_characters = iTestResult.getMethod().getMethodName().length();
@@ -283,11 +297,11 @@ public class test_listener implements ITestListener, IExecutionListener
           Logger.getLogger(test_listener.class.getName()).log(Level.SEVERE, null, ex);
       }
       
-//      try {
-//          file_utils.attachFileToIssue(browser_manager.id_issue_xray, screenshot);
-//      } catch (IOException ex) {
-//          Logger.getLogger(test_listener.class.getName()).log(Level.SEVERE, null, ex);
-//      }
+      try {
+          jira_xray.attach_file_to_issue(browser_manager.id_issue_xray, screenshot);
+      } catch (IOException ex) {
+          Logger.getLogger(test_listener.class.getName()).log(Level.SEVERE, null, ex);
+      }
       
     element_manager.debug_log(test_status(iTestResult));
   }
