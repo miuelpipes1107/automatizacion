@@ -1,1 +1,0 @@
-{"uuid":"d09bbc67-261a-45a9-a783-b6af1a2e8ce2","name":"ink_testing_source.login.login","children":["a08e688f-f994-440b-98b5-f7f21d19d94c"],"befores":[],"afters":[{"name":"method_after_class","status":"passed","stage":"finished","description":"","steps":[],"attachments":[],"parameters":[],"start":1720979261084,"stop":1720979261085}],"start":1720979250442,"stop":1720979261279}

@@ -26,12 +26,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  */
 public class browser_manager
 {
+
   public static WebDriver web_driver_instace;
   public static WebDriverWait wait;
   public static WebDriverWait wait_hidden;
   public static WebDriverWait wait_alert;
   public static String id_issue_xray;
-  
+
   /**
    * Opens the web browser and navigates to the login page. Initializes the
    * driver, configures implicit and explicit waits, maximizes the window, sets
@@ -350,7 +351,7 @@ public class browser_manager
       task_line = br.readLine();
     }
   }
-  
+
   private static BufferedReader get_tasklist()
   {
     Process p = null;
@@ -366,7 +367,7 @@ public class browser_manager
     BufferedReader br = new BufferedReader(new InputStreamReader(is));
     return br;
   }
-  
+
   /**
    * returns the server name
    *

@@ -103,9 +103,10 @@ public class configuration_server
   public static final String JIRA_URL                                           = dotenv.get("JIRA_URL");
   public static final String JIRA_API_ENDPOINT                                  = dotenv.get("JIRA_API_ENDPOINT");
   
-  public static final String XRAY_AUTH_URL                                      = "https://xray.cloud.getxray.app/api/v2/authenticate";
-  public static String CLIENT_ID_XRAY                                           ="";
-  public static String CLIENT_SECRET_XRAY                                       ="";
+  public static final String XRAY_AUTH_URL                                      = dotenv.get("XRAY_AUTH_URL");
+  public static String CLIENT_ID_XRAY                                           = dotenv.get("CLIENT_ID_XRAY");
+  public static String CLIENT_SECRET_XRAY                                       = dotenv.get("CLIENT_SECRET_XRAY");
+  public static String XRAY_API_ENDPOINT                                        = dotenv.get("XRAY_API_ENDPOINT");
   
   
   // ================================== LOGIN ==================================  

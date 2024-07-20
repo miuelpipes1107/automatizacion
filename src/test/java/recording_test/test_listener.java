@@ -13,6 +13,7 @@ import io.qameta.allure.Attachment;
 import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,7 +38,7 @@ public class test_listener implements ITestListener, IExecutionListener
   public static String name_of_the_running_class;
   public static String name_server;
   public static File screenshot;
-  public static jira_xray jira_xray_issue;
+  public static jira_xray jira_xray_issue;  
 
   /**
    * Test listener class constructor. Initializes the custom screen recorder.
@@ -217,7 +218,7 @@ public class test_listener implements ITestListener, IExecutionListener
     {
       e.printStackTrace();
     }
-
+    
 //    if (SystemUtils.IS_OS_LINUX && !context.getName().equals("Surefire test") && !context.getName().equals("tests_functional"))
 //    {
 //      slack_incoming_webhook.slack_webhook_post_request(context, Zip_name);
@@ -241,14 +242,14 @@ public class test_listener implements ITestListener, IExecutionListener
       configuration_server.NAME_CASE = iTestResult.getName();
       
         jira_xray_issue = new jira_xray();
-        browser_manager.id_issue_xray = jira_xray_issue.search_issue_by_summary(configuration_server.NAME_CASE);
-        if (!browser_manager.id_issue_xray.equals("")) {
-            jira_xray_issue.issue_relationship(browser_manager.id_issue_xray);
-        } else {
-            jira_xray_issue.create_or_update_jira_issue(configuration_server.NAME_CASE, configuration_server.NAME_CASE, "10005","");
-            browser_manager.id_issue_xray = jira_xray_issue.search_issue_by_summary(configuration_server.NAME_CASE);
-            jira_xray_issue.issue_relationship(browser_manager.id_issue_xray);
-        }
+//        browser_manager.id_issue_xray = jira_xray_issue.search_issue_by_summary(configuration_server.NAME_CASE);
+//        if (browser_manager.id_issue_xray!=null) {
+//            jira_xray_issue.issue_relationship(browser_manager.id_issue_xray);
+//        } else {
+//            jira_xray_issue.create_or_update_jira_issue(configuration_server.NAME_CASE, configuration_server.NAME_CASE, "10005","");
+//            browser_manager.id_issue_xray = jira_xray_issue.search_issue_by_summary(configuration_server.NAME_CASE);
+//            jira_xray_issue.issue_relationship(browser_manager.id_issue_xray);
+//        }
       
       
       if (iTestResult.getMethod().getMethodName().length() < number_of_characters)
@@ -286,23 +287,40 @@ public class test_listener implements ITestListener, IExecutionListener
   @Override
   public void onTestFailure(ITestResult iTestResult)
   {
+    File new_file_destination_xray;
+    new_file_destination_xray = new File(configuration_server.PATCH_XRAY);
+
+    if (!new_file_destination_xray.exists())
+    {
+      new_file_destination_xray.mkdirs();
+    }
+
     Allure.addAttachment(getTestMethodName(iTestResult), new ByteArrayInputStream(((TakesScreenshot) browser_manager.web_driver_instace)
       .getScreenshotAs(OutputType.BYTES)));
-    screenshot= ((TakesScreenshot) browser_manager.web_driver_instace).getScreenshotAs(OutputType.FILE);
-      try {
-          int lastDotIndex = iTestResult.getInstanceName().lastIndexOf(".");
-          FileUtils.copyFile(screenshot, new File("xray/" + iTestResult.getInstanceName().substring(lastDotIndex+1)+
-                  "_"+getTestMethodName(iTestResult)+".png"));
-      } catch (IOException ex) {
-          Logger.getLogger(test_listener.class.getName()).log(Level.SEVERE, null, ex);
-      }
+    screenshot = ((TakesScreenshot) browser_manager.web_driver_instace).getScreenshotAs(OutputType.FILE);
+    try
+    {
+//      int lastDotIndex = iTestResult.getInstanceName().lastIndexOf(".");
+//      FileUtils.copyFile(screenshot, new File("xray/" + iTestResult.getInstanceName().substring(lastDotIndex + 1)
+//        + "_" + getTestMethodName(iTestResult) + ".png"));
       
-      try {
-          jira_xray.attach_file_to_issue(browser_manager.id_issue_xray, screenshot);
-      } catch (IOException ex) {
-          Logger.getLogger(test_listener.class.getName()).log(Level.SEVERE, null, ex);
-      }
-      
+      int lastDotIndex = iTestResult.getInstanceName().lastIndexOf(".");
+      FileUtils.copyFile(screenshot, new File("xray/" + getTestMethodName(iTestResult) + ".png"));
+    }
+    catch (IOException ex)
+    {
+      Logger.getLogger(test_listener.class.getName()).log(Level.SEVERE, null, ex);
+    }
+
+//    try
+//    {
+//      jira_xray.attach_file_to_issue(browser_manager.id_issue_xray, screenshot);
+//    }
+//    catch (IOException ex)
+//    {
+//      Logger.getLogger(test_listener.class.getName()).log(Level.SEVERE, null, ex);
+//    }
+
     element_manager.debug_log(test_status(iTestResult));
   }
 
@@ -345,7 +363,20 @@ public class test_listener implements ITestListener, IExecutionListener
   public static void method_after_class() throws IOException, AWTException
   {
     element_manager.debug_log("###################### Case, entry method method_after_class ###################### ");
-        
+
+    jira_xray.attach_png_files_to_issues();
+    
+//    String token="";
+//    
+//    try
+//    {
+//      token=jira_xray.authenticate(configuration_server.CLIENT_ID_XRAY, configuration_server.CLIENT_SECRET_XRAY);
+//      jira_xray.upload_test_results(token);
+//    }
+//    catch (IOException e)
+//    {
+//      e.printStackTrace();
+//    }
   }
 
 }
