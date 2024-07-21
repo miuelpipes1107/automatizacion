@@ -95,27 +95,27 @@ public class jira_xray
         
 //        add_test_to_execution(httpClient,"AUT-125",browser_manager.id_issue_xray);
         
-        if (responseString.startsWith("["))
-        {
-          // Si la respuesta es un JSONArray
-          JSONArray fieldss = new JSONArray(responseString);
-
-          for (int i = 0; i < fields.length(); i++)
-          {
-            JSONObject field = fieldss.getJSONObject(i);
-            System.out.println("ID: " + field.getString("id") + ", Name: " + field.getString("name"));
-          }
-        }
-        else if (responseString.startsWith("{"))
-        {
-          // Si la respuesta es un JSONObject
-          JSONObject field = new JSONObject(responseString);
-          System.out.println("ID: " + field.getString("id") + ", Name: " + field.getString("name"));
-        }
-        else
-        {
-          System.out.println("Unexpected response format");
-        }
+//        if (responseString.startsWith("["))
+//        {
+//          // Si la respuesta es un JSONArray
+//          JSONArray fieldss = new JSONArray(responseString);
+//
+//          for (int i = 0; i < fields.length(); i++)
+//          {
+//            JSONObject field = fieldss.getJSONObject(i);
+//            System.out.println("ID: " + field.getString("id") + ", Name: " + field.getString("name"));
+//          }
+//        }
+//        else if (responseString.startsWith("{"))
+//        {
+//          // Si la respuesta es un JSONObject
+//          JSONObject field = new JSONObject(responseString);
+//          System.out.println("ID: " + field.getString("id") + ", Name: " + field.getString("name"));
+//        }
+//        else
+//        {
+//          System.out.println("Unexpected response format");
+//        }
         
         if (browser_manager.id_issue_xray != null)
         {
