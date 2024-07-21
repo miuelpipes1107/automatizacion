@@ -2,6 +2,7 @@
 package ink_testing_source.login;
 
 import ink_testing_source.configuration.browser_manager;
+import ink_testing_source.configuration.configuration_server;
 import ink_testing_source.configuration.element_manager;
 import ink_testing_source.configuration.method_after_before;
 import java.awt.AWTException;
@@ -25,16 +26,14 @@ public class login extends method_after_before
   public static By password = By.id("m_login_password");
   public static String text_password = "password";
   public static WebDriverWait Wait;
-  public static String testExecKey = System.getenv("TEST_EXEC_KEY");
-  public static String projectKey = System.getenv("PROJECT_KEY");
 
   @AfterClass
   @Override
   public void method_after_class() throws IOException, AWTException
   {
     test_listener.method_after_class();
-    System.out.println("testExecKey: "+testExecKey);
-    System.out.println("projectKey: "+projectKey);
+//    System.out.println("testExecKey: "+configuration_server.testExecKey);
+//    System.out.println("projectKey: "+configuration_server.projectKey);
   }
 
   @Test

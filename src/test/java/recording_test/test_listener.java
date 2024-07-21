@@ -15,6 +15,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jira_xray.jira_xray;
@@ -240,17 +241,7 @@ public class test_listener implements ITestListener, IExecutionListener
     {
       number_of_characters = 80;
       configuration_server.NAME_CASE = iTestResult.getName();
-      
-        jira_xray_issue = new jira_xray();
-//        browser_manager.id_issue_xray = jira_xray_issue.search_issue_by_summary(configuration_server.NAME_CASE);
-//        if (browser_manager.id_issue_xray!=null) {
-//            jira_xray_issue.issue_relationship(browser_manager.id_issue_xray);
-//        } else {
-//            jira_xray_issue.create_or_update_jira_issue(configuration_server.NAME_CASE, configuration_server.NAME_CASE, "10005","");
-//            browser_manager.id_issue_xray = jira_xray_issue.search_issue_by_summary(configuration_server.NAME_CASE);
-//            jira_xray_issue.issue_relationship(browser_manager.id_issue_xray);
-//        }
-      
+      configuration_server.list_created_cases.add(configuration_server.NAME_CASE);
       
       if (iTestResult.getMethod().getMethodName().length() < number_of_characters)
       {
@@ -364,7 +355,11 @@ public class test_listener implements ITestListener, IExecutionListener
   {
     element_manager.debug_log("###################### Case, entry method method_after_class ###################### ");
 
-    jira_xray.attach_png_files_to_issues();
+    jira_xray_issue = new jira_xray();
+    jira_xray_issue.create_or_update_jira_issue(configuration_server.list_created_cases,"10005","");
+    
+    configuration_server.list_created_cases= new ArrayList<>();
+    configuration_server.matrix_issues= new ArrayList<>();
     
 //    String token="";
 //    

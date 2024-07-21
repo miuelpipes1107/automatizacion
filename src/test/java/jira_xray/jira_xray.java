@@ -36,6 +36,8 @@ import java.util.stream.Stream;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
+import java.util.ArrayList;
+import org.json.JSONArray;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -55,44 +57,149 @@ public class jira_xray
   {
   }
 
-  public void create_jira_issue(String summary, String description, String issueTypeId) throws IOException
+  public void create_jira_issue(String summary, String description, String issueTypeId, CloseableHttpClient httpClient) throws IOException
   {
-    CloseableHttpClient httpClient = HttpClients.createDefault();
-    HttpPost httpPost = new HttpPost(configuration_server.JIRA_URL + configuration_server.JIRA_API_ENDPOINT);
 
+    List<String> issue_information = new ArrayList<>();
+    browser_manager.id_issue_xray = search_issue_by_summary(summary, httpClient);
+
+    if (browser_manager.id_issue_xray == null)
+    {
+
+      HttpPost httpPost = new HttpPost(configuration_server.JIRA_URL + configuration_server.JIRA_API_ENDPOINT);
+
+      String auth = configuration_server.JIRA_USER_EMAIL + ":" + configuration_server.JIRA_API_TOKEN;
+      byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes(StandardCharsets.ISO_8859_1));
+      String authHeader = "Basic " + new String(encodedAuth);
+      httpPost.setHeader("Authorization", authHeader);
+      httpPost.setHeader("Content-Type", "application/json");
+
+      JSONObject issueDetails = new JSONObject();
+      JSONObject fields = new JSONObject();
+      fields.put("summary", summary);
+      fields.put("description", description);
+      fields.put("issuetype", new JSONObject().put("id", issueTypeId));
+      fields.put("project", new JSONObject().put("key", "AUT"));
+      issueDetails.put("fields", fields);
+
+      StringEntity entity = new StringEntity(issueDetails.toString());
+      httpPost.setEntity(entity);
+
+      try (CloseableHttpResponse response = httpClient.execute(httpPost))
+      {
+        String responseString = EntityUtils.toString(response.getEntity());
+        System.out.println("Response Code: " + response.getStatusLine().getStatusCode());
+        System.out.println("Response Body: " + responseString);
+        JSONObject responseString_objet = new JSONObject(responseString);
+        browser_manager.id_issue_xray = responseString_objet.getString("key");
+        
+//        add_test_to_execution(httpClient,"AUT-125",browser_manager.id_issue_xray);
+        
+        if (responseString.startsWith("["))
+        {
+          // Si la respuesta es un JSONArray
+          JSONArray fieldss = new JSONArray(responseString);
+
+          for (int i = 0; i < fields.length(); i++)
+          {
+            JSONObject field = fieldss.getJSONObject(i);
+            System.out.println("ID: " + field.getString("id") + ", Name: " + field.getString("name"));
+          }
+        }
+        else if (responseString.startsWith("{"))
+        {
+          // Si la respuesta es un JSONObject
+          JSONObject field = new JSONObject(responseString);
+          System.out.println("ID: " + field.getString("id") + ", Name: " + field.getString("name"));
+        }
+        else
+        {
+          System.out.println("Unexpected response format");
+        }
+        
+        if (browser_manager.id_issue_xray != null)
+        {
+          issue_information.add(browser_manager.id_issue_xray);
+          issue_information.add(summary);
+          configuration_server.matrix_issues.add(issue_information);
+
+          for (int i = 0; i < configuration_server.matrix_issues.size(); i++)
+          {
+            String id = configuration_server.matrix_issues.get(i).get(0);
+            String name_usse = configuration_server.matrix_issues.get(i).get(1);
+          }
+        }
+      }
+    }
+    else
+    {
+      issue_information.add(browser_manager.id_issue_xray);
+      issue_information.add(summary);
+      configuration_server.matrix_issues.add(issue_information);
+
+      for (int i = 0; i < configuration_server.matrix_issues.size(); i++)
+      {
+        String id = configuration_server.matrix_issues.get(i).get(0);
+        String name_usse = configuration_server.matrix_issues.get(i).get(1);
+      }
+    }
+  }
+  
+  // Autenticación básica para Jira
+  private static String getAuthHeader()
+  {
     String auth = configuration_server.JIRA_USER_EMAIL + ":" + configuration_server.JIRA_API_TOKEN;
     byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes(StandardCharsets.ISO_8859_1));
-    String authHeader = "Basic " + new String(encodedAuth);
-    httpPost.setHeader("Authorization", authHeader);
+    return "Basic " + new String(encodedAuth);
+  }
+  
+  // Obtener un token de autenticación de Xray
+  private static String getAuthToken(CloseableHttpClient httpClient) throws IOException
+  {
+    String authUrl = configuration_server.XRAY_AUTH_URL + "/authenticate";
+    HttpPost httpPost = new HttpPost(authUrl);
     httpPost.setHeader("Content-Type", "application/json");
 
-    JSONObject issueDetails = new JSONObject();
-    JSONObject fields = new JSONObject();
-    fields.put("summary", summary);
-    fields.put("description", description);
-    fields.put("issuetype", new JSONObject().put("id", issueTypeId));
-    fields.put("project", new JSONObject().put("key", "AUT")); // Replace with your project key
-    issueDetails.put("fields", fields);
+    // Credenciales en formato JSON
+    JSONObject credentials = new JSONObject();
+    credentials.put("client_id", configuration_server.CLIENT_ID_XRAY);
+    credentials.put("client_secret", configuration_server.CLIENT_SECRET_XRAY);
 
-    StringEntity entity = new StringEntity(issueDetails.toString());
-    httpPost.setEntity(entity);
+    httpPost.setEntity(new StringEntity(credentials.toString(), StandardCharsets.UTF_8));
+
+    try (CloseableHttpResponse response = httpClient.execute(httpPost))
+    {
+      String responseString = EntityUtils.toString(response.getEntity());
+      return responseString.replace("\"", ""); // El token viene con comillas
+    }
+  }
+  
+  // Asociar un test a una ejecución
+  public static void add_test_to_execution(CloseableHttpClient httpClient, String testExecutionKey, String testKey) throws IOException
+  {
+    String addTestUrl = configuration_server.XRAY_AUTH_URL + "/testexec/" + testExecutionKey + "/test";
+
+    HttpPost httpPost = new HttpPost(addTestUrl);
+    httpPost.setHeader("Authorization", configuration_server.CLIENT_SECRET_XRAY);
+    httpPost.setHeader("Content-Type", "application/json");
+
+    // Detalles del test a asociar
+    JSONArray tests = new JSONArray();
+    tests.put(testKey);
+
+    httpPost.setEntity(new StringEntity(tests.toString(), StandardCharsets.UTF_8));
 
     try (CloseableHttpResponse response = httpClient.execute(httpPost))
     {
       String responseString = EntityUtils.toString(response.getEntity());
       System.out.println("Response Code: " + response.getStatusLine().getStatusCode());
       System.out.println("Response Body: " + responseString);
-      JSONObject responseString_objet = new JSONObject(responseString);
-      browser_manager.id_issue_xray = responseString_objet.getString("key");
     }
-
-    httpClient.close();
   }
-
-  public static String search_issue_by_summary(String summary,CloseableHttpClient httpClient) throws IOException
+  
+  public String search_issue_by_summary(String summary, CloseableHttpClient httpClient) throws IOException
   {
 
-//    CloseableHttpClient httpClient = HttpClients.createDefault();
     String jqlQuery = null;
     try
     {
@@ -122,12 +229,14 @@ public class jira_xray
       }
     }
 
-//    httpClient.close();
     return null;
   }
   
-  public static void attach_png_files_to_issues() throws IOException
+  public void attach_png_files_to_issues(List<List<String>> list_cases, CloseableHttpClient httpClient) throws IOException
   {
+
+    String issueKey = null;
+    String name_issue = null;
     // Paso 1: Buscar archivos .png en la ruta especificada
     try (Stream<Path> paths = Files.walk(Paths.get("xray")))
     {
@@ -137,19 +246,28 @@ public class jira_xray
         .map(Path::toFile)
         .collect(Collectors.toList());
 
-      // Paso 2: Extraer los nombres de esos archivos
-      CloseableHttpClient httpClient = HttpClients.createDefault();
+      // Paso 2: Extraer los nombres de esos archivos      
       for (File pngFile : pngFiles)
       {
         String fileName = pngFile.getName();
-        String file_name_without_extension = fileName.substring(0, fileName.lastIndexOf('.'));            
-        String issueKey = search_issue_by_summary(file_name_without_extension, httpClient);
+        String file_name_without_extension = fileName.substring(0, fileName.lastIndexOf('.'));
+        if (list_cases != null)
+        {
+          for (int i = 0; i < list_cases.size(); i++)
+          {
+            name_issue = list_cases.get(i).get(1);
+            if (name_issue.equals(file_name_without_extension))
+            {
+              issueKey = list_cases.get(i).get(0);
+            }
+          }
+        }
+
         if (issueKey != null)
         {
           attach_file_to_issue(issueKey, pngFile, httpClient);
         }
       }
-      httpClient.close();
     }
     catch (IOException e)
     {
@@ -201,13 +319,21 @@ public class jira_xray
 
   }
 
-  public void create_or_update_jira_issue(String summary, String description, String issueTypeId, String issueKey)
+  public void create_or_update_jira_issue(List<String> list_cases, String issue_type_id, String issue_key)
   {
     try
     {
+      CloseableHttpClient httpClient = HttpClients.createDefault();
 
-      create_jira_issue(summary, description, issueTypeId);
-
+      if (!list_cases.isEmpty())
+      {
+        for (String list_name_case : list_cases)
+        {
+          create_jira_issue(list_name_case, list_name_case, issue_type_id, httpClient);
+          attach_png_files_to_issues(configuration_server.matrix_issues,httpClient);
+        }
+      }
+      httpClient.close();
     }
     catch (IOException e)
     {
@@ -232,7 +358,6 @@ public class jira_xray
 
   public static void attach_file_to_issue(String issueKey, File file,CloseableHttpClient httpClient) throws IOException
   {
-//    CloseableHttpClient httpClient = HttpClients.createDefault();
     String baseUrl = configuration_server.JIRA_URL + "/rest/api/2/issue/" + issueKey;
     String auth = configuration_server.JIRA_USER_EMAIL + ":" + configuration_server.JIRA_API_TOKEN;
     byte[] encodedAuth = java.util.Base64.getEncoder().encode(auth.getBytes(StandardCharsets.ISO_8859_1));
@@ -274,7 +399,6 @@ public class jira_xray
     System.out.println("Response Code: " + postResponse.getStatusLine().getStatusCode());
     System.out.println("Response Body: " + postResponseString);
 
-//    httpClient.close();
   }
 
   public static void upload_test_results_(String token) throws IOException

@@ -6,6 +6,8 @@
 package ink_testing_source.configuration;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.lang3.SystemUtils;
 
 /**
@@ -108,6 +110,11 @@ public class configuration_server
   public static String CLIENT_SECRET_XRAY                                       = dotenv.get("CLIENT_SECRET_XRAY");
   public static String XRAY_API_ENDPOINT                                        = dotenv.get("XRAY_API_ENDPOINT");
   
+  public static String testExecKey                                              = System.getenv("TEST_EXEC_KEY");
+  public static String projectKey                                               = System.getenv("PROJECT_KEY");
+  
+  public static List<String>       list_created_cases                           = new ArrayList<>();
+  public static List<List<String>>  matrix_issues                               = new ArrayList<>();  
   
   // ================================== LOGIN ==================================  
   /**
