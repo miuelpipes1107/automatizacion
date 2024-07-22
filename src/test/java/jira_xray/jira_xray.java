@@ -75,8 +75,8 @@ public class jira_xray
       httpPost.setHeader("Content-Type", "application/json");
 
       JSONObject issueDetails = new JSONObject();
-      JSONObject fields = new JSONObject();
-      fields.put("summary", summary);
+      JSONObject fields = new JSONObject();      
+      fields.put("summary", summary);      
       fields.put("description", description);
       fields.put("issuetype", new JSONObject().put("id", issueTypeId));
       fields.put("project", new JSONObject().put("key", "AUT"));
@@ -151,6 +151,21 @@ public class jira_xray
     String auth = configuration_server.JIRA_USER_EMAIL + ":" + configuration_server.JIRA_API_TOKEN;
     byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes(StandardCharsets.ISO_8859_1));
     return "Basic " + new String(encodedAuth);
+  }
+  
+  public static void getIssueCreateMeta(CloseableHttpClient httpClient) throws IOException
+  {
+    String META_URL = configuration_server.JIRA_URL + "/rest/api/2/issue/createmeta";
+    HttpGet httpGet = new HttpGet(META_URL);
+    httpGet.setHeader("Authorization", getAuthHeader());
+    httpGet.setHeader("Content-Type", "application/json");
+
+    try (CloseableHttpResponse response = httpClient.execute(httpGet))
+    {
+      String responseString = EntityUtils.toString(response.getEntity());
+      JSONObject jsonResponse = new JSONObject(responseString);
+      System.out.println(jsonResponse.toString(2));  // Imprimir la respuesta con formato
+    }
   }
   
   // Obtener un token de autenticación de Xray
@@ -323,7 +338,7 @@ public class jira_xray
   {
     try
     {
-      CloseableHttpClient httpClient = HttpClients.createDefault();
+      CloseableHttpClient httpClient = HttpClients.createDefault();      
 
       if (!list_cases.isEmpty())
       {

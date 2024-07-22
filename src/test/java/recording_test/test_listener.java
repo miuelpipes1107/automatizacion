@@ -24,6 +24,8 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
 import org.apache.commons.lang3.SystemUtils;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.testng.*;
 
 /**
@@ -241,6 +243,7 @@ public class test_listener implements ITestListener, IExecutionListener
     {
       number_of_characters = 80;
       configuration_server.NAME_CASE = iTestResult.getName();
+      String name=iTestResult.getInstanceName();      
       configuration_server.list_created_cases.add(configuration_server.NAME_CASE);
       
       if (iTestResult.getMethod().getMethodName().length() < number_of_characters)

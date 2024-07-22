@@ -99,7 +99,8 @@ jobs:
                 { "name": "${{ matrix.Plan }}" },
                 { "name": "${{ matrix.Plan }}" }
               ],
-              "labels": ["ocultar"]
+              "labels": ["ocultar"],
+              "customfield_10042": ""
             }
           }' > test_execution1.json    
           
