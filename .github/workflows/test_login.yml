@@ -100,7 +100,7 @@ jobs:
                 { "name": "${{ matrix.Plan }}" }
               ],
               "labels": ["ocultar"],
-              "customfield_10042": ""
+              "Definicion": ""
             }
           }' > test_execution1.json    
           
