@@ -243,7 +243,9 @@ public class test_listener implements ITestListener, IExecutionListener
     {
       number_of_characters = 80;
       configuration_server.NAME_CASE = iTestResult.getName();
-      String name=iTestResult.getInstanceName();      
+      CloseableHttpClient httpClient = HttpClients.createDefault();      
+      String name=iTestResult.getInstanceName();
+//      jira_xray.getIssueTypeFields(httpClient);      
       configuration_server.list_created_cases.add(configuration_server.NAME_CASE);
       
       if (iTestResult.getMethod().getMethodName().length() < number_of_characters)

@@ -62,7 +62,8 @@ public class jira_xray
 
     List<String> issue_information = new ArrayList<>();
     browser_manager.id_issue_xray = search_issue_by_summary(summary, httpClient);
-
+    String token_xray = getAuthToken(httpClient);
+//    isTokenValid(httpClient,token_xray);
     if (browser_manager.id_issue_xray == null)
     {
 
@@ -78,7 +79,7 @@ public class jira_xray
       JSONObject fields = new JSONObject();      
       fields.put("summary", summary);      
       fields.put("description", description);
-      fields.put("issuetype", new JSONObject().put("id", issueTypeId));
+      fields.put("issuetype", new JSONObject().put("id", issueTypeId));      
       fields.put("project", new JSONObject().put("key", "AUT"));
       issueDetails.put("fields", fields);
 
@@ -122,6 +123,7 @@ public class jira_xray
           issue_information.add(browser_manager.id_issue_xray);
           issue_information.add(summary);
           configuration_server.matrix_issues.add(issue_information);
+          add_test_to_execution(httpClient,"AUT-3",browser_manager.id_issue_xray,token_xray);
 
           for (int i = 0; i < configuration_server.matrix_issues.size(); i++)
           {
@@ -168,47 +170,149 @@ public class jira_xray
     }
   }
   
-  // Obtener un token de autenticación de Xray
-  private static String getAuthToken(CloseableHttpClient httpClient) throws IOException
+  // Obtener la lista de campos disponibles para un tipo de issue específico
+  public static void getIssueTypeFields(CloseableHttpClient httpClient) throws IOException
   {
-    String authUrl = configuration_server.XRAY_AUTH_URL + "/authenticate";
+    String ISSUE_TYPE_URL = configuration_server.JIRA_URL + "/rest/api/2/issue/createmeta?projectKeys=AUT&expand=projects.issuetypes.fields";
+    HttpGet httpGet = new HttpGet(ISSUE_TYPE_URL);
+    httpGet.setHeader("Authorization", getAuthHeader());
+    httpGet.setHeader("Content-Type", "application/json");
+
+    try (CloseableHttpResponse response = httpClient.execute(httpGet))
+    {
+      String responseString = EntityUtils.toString(response.getEntity());
+      System.out.println("Respuesta completa de la API: " + responseString);
+
+      JSONObject jsonResponse = new JSONObject(responseString);
+      JSONArray projects = jsonResponse.getJSONArray("projects");
+
+      for (int i = 0; i < projects.length(); i++)
+      {
+        JSONObject project = projects.getJSONObject(i);
+        JSONArray issueTypes = project.getJSONArray("issuetypes");
+
+        for (int j = 0; j < issueTypes.length(); j++)
+        {
+          JSONObject issueType = issueTypes.getJSONObject(j);
+          String issueTypeName = issueType.getString("name");
+
+          System.out.println("Campos para el tipo de issue: " + issueTypeName);
+
+          JSONObject fields = issueType.getJSONObject("fields");
+          for (String fieldKey : fields.keySet())
+          {
+            JSONObject fieldDetails = fields.getJSONObject(fieldKey);
+            System.out.println("Nombre del campo: " + fieldDetails.getString("name") + ", ID del campo: " + fieldKey);
+          }
+        }
+      }
+    }
+  }
+  
+  public static void getCustomFields(CloseableHttpClient httpClient) throws IOException
+  {
+    String CUSTOM_FIELDS_URL = configuration_server.JIRA_URL + "/rest/api/2/field";
+    HttpGet httpGet = new HttpGet(CUSTOM_FIELDS_URL);
+    httpGet.setHeader("Authorization", getAuthHeader());
+    httpGet.setHeader("Content-Type", "application/json");
+
+    try (CloseableHttpResponse response = httpClient.execute(httpGet))
+    {
+      String responseString = EntityUtils.toString(response.getEntity());
+      JSONArray jsonResponse = new JSONArray(responseString);
+
+      // Buscar el campo "Definición" en la lista de campos
+      for (int i = 0; i < jsonResponse.length(); i++)
+      {
+        JSONObject field = jsonResponse.getJSONObject(i);
+//        if (field.getString("name").equalsIgnoreCase("Definición"))
+//        {
+          System.out.println("ID del campo : "+field.getString("name")+" :" + field.getString("id"));
+//          break;
+//        }
+      }
+    }
+  }
+  
+  // Obtener un token de autenticación de Xray
+  public static String getAuthToken(CloseableHttpClient httpClient) throws IOException
+  {
+    String authUrl = configuration_server.XRAY_AUTH_URL + "/api/v2/authenticate";
     HttpPost httpPost = new HttpPost(authUrl);
     httpPost.setHeader("Content-Type", "application/json");
 
-    // Credenciales en formato JSON
-    JSONObject credentials = new JSONObject();
-    credentials.put("client_id", configuration_server.CLIENT_ID_XRAY);
-    credentials.put("client_secret", configuration_server.CLIENT_SECRET_XRAY);
+    // Credenciales en formato JSON    
+    JSONObject authPayload = new JSONObject();
+    authPayload.put("client_id", configuration_server.CLIENT_ID_XRAY);
+    authPayload.put("client_secret", configuration_server.CLIENT_SECRET_XRAY);
 
-    httpPost.setEntity(new StringEntity(credentials.toString(), StandardCharsets.UTF_8));
+    httpPost.setEntity(new StringEntity(authPayload.toString()));
 
     try (CloseableHttpResponse response = httpClient.execute(httpPost))
     {
       String responseString = EntityUtils.toString(response.getEntity());
-      return responseString.replace("\"", ""); // El token viene con comillas
+      if (response.getStatusLine().getStatusCode() == 200)
+      {
+        return responseString.replace("\"", ""); // Este es el token de autenticación
+      }
+      else
+      {
+        throw new IOException("Error al obtener el token de autenticación: " + responseString);
+      }
+    }
+  }
+  
+  public static boolean isTokenValid(CloseableHttpClient httpClient, String authToken) throws IOException
+  {
+    HttpGet httpGet = new HttpGet(configuration_server.XRAY_AUTH_URL + "/api/v2/testexec");
+    httpGet.setHeader("Authorization", "Bearer " + authToken);
+    httpGet.setHeader("Content-Type", "application/json");
+
+    try (CloseableHttpResponse response = httpClient.execute(httpGet))
+    {
+      int statusCode = response.getStatusLine().getStatusCode();
+      if (statusCode == 200)
+      {
+        // El token es válido
+        return true;
+      }
+      else
+      {
+        // El token es inválido o ha expirado
+        System.out.println("Error: " + statusCode + " - " + EntityUtils.toString(response.getEntity()));
+        return false;
+      }
     }
   }
   
   // Asociar un test a una ejecución
-  public static void add_test_to_execution(CloseableHttpClient httpClient, String testExecutionKey, String testKey) throws IOException
+  public static void add_test_to_execution(CloseableHttpClient httpClient, String testExecKey, String testKey, String authToken) throws IOException
   {
-    String addTestUrl = configuration_server.XRAY_AUTH_URL + "/testexec/" + testExecutionKey + "/test";
-
-    HttpPost httpPost = new HttpPost(addTestUrl);
-    httpPost.setHeader("Authorization", configuration_server.CLIENT_SECRET_XRAY);
+    String ADD_TEST_TO_EXECUTION_URL = "https://xray.cloud.getxray.app/api/v2/testexec/" + testExecKey + "/test";
+    HttpPost httpPost = new HttpPost(ADD_TEST_TO_EXECUTION_URL);
+    httpPost.setHeader("Authorization", "Bearer " + authToken);
     httpPost.setHeader("Content-Type", "application/json");
 
-    // Detalles del test a asociar
-    JSONArray tests = new JSONArray();
-    tests.put(testKey);
+    JSONArray testsArray = new JSONArray();
+    testsArray.put(testKey);
 
-    httpPost.setEntity(new StringEntity(tests.toString(), StandardCharsets.UTF_8));
+    JSONObject requestPayload = new JSONObject();
+    requestPayload.put("add", testsArray);
+
+    httpPost.setEntity(new StringEntity(requestPayload.toString()));
 
     try (CloseableHttpResponse response = httpClient.execute(httpPost))
     {
+      int statusCode = response.getStatusLine().getStatusCode();
       String responseString = EntityUtils.toString(response.getEntity());
-      System.out.println("Response Code: " + response.getStatusLine().getStatusCode());
-      System.out.println("Response Body: " + responseString);
+      if (statusCode == 200)
+      {
+        System.out.println("Test agregado exitosamente: " + responseString);
+      }
+      else
+      {
+        System.out.println("Error al agregar test: " + responseString);
+      }
     }
   }
   
@@ -338,13 +442,14 @@ public class jira_xray
   {
     try
     {
-      CloseableHttpClient httpClient = HttpClients.createDefault();      
-
+      CloseableHttpClient httpClient = HttpClients.createDefault();
+      
       if (!list_cases.isEmpty())
       {
         for (String list_name_case : list_cases)
         {
           create_jira_issue(list_name_case, list_name_case, issue_type_id, httpClient);
+          
           attach_png_files_to_issues(configuration_server.matrix_issues,httpClient);
         }
       }

@@ -152,4 +152,3 @@ jobs:
 #      - name: Upload Allure results to Allure TestOps
 #        run: |
 #          /__t/allurectl/2.15.4/amd64/allurectl upload ./xray --project-id ${{ secrets.ALLURE_PROJECT_ID }}
-
