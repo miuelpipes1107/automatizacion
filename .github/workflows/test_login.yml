@@ -100,7 +100,7 @@ jobs:
                 { "name": "${{ matrix.Plan }}" }
               ],
               "labels": ["ocultar"],
-              "Definicion": [""]
+              "desciption": ["github"]
             }
           }' > test_execution1.json    
           
