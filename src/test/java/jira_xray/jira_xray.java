@@ -78,7 +78,7 @@ public class jira_xray
       JSONObject issueDetails = new JSONObject();
       JSONObject fields = new JSONObject();      
       fields.put("summary", summary);      
-      fields.put("description", description);
+      fields.put("description", "");
       fields.put("issuetype", new JSONObject().put("id", issueTypeId));      
       fields.put("project", new JSONObject().put("key", "AUT"));
       issueDetails.put("fields", fields);
