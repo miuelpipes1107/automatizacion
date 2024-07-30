@@ -208,7 +208,7 @@
                 <configuration>
                     <cloud>true</cloud>
                     <projectKey>AUT</projectKey>
-                    <version>${project.version}</version>
+                    <version>0.7.6</version>
                     <reportFormat>junit</reportFormat>
                     <reportFile>target/surefire-reports/*.xml</reportFile>
                 </configuration>
