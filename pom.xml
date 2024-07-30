@@ -220,7 +220,6 @@
                             <fixVersion>1.0</fixVersion>
                             <testPlanKey>AUT-100</testPlanKey>
                             <reportFormat>junit</reportFormat>
-                            <reportFile>target/surefire-reports/*.xml</reportFile>
                         </configuration>
                     </execution>
                 </executions>
