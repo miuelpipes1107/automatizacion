@@ -168,12 +168,12 @@
             <version>5.3.8</version>
         </dependency>
         
-        <dependency>
+        <!--<dependency>
             <groupId>app.getxray</groupId>
             <artifactId>xray-maven-plugin</artifactId>
             <version>${internal.xray-maven-plugin.version}</version>
             <scope>test</scope>
-        </dependency>                
+        </dependency>-->                
         
     </dependencies>
 
