@@ -89,6 +89,10 @@ jobs:
         run: |
           ls -la xray/
           
+      - name: Listar archivos en el directorio 'targe/'
+        run: |
+          ls -la targe/surefire-reports/    
+          
       - name: Push results to Xray Cloud          
         run: mvn xray:import-results -Dxray.reportFormat=junit -Dxray.reportFile=target/surefire-reports/TEST-ink_testing_source.login.login.xml 
 #        run: mvn -Dxray.clientId=${{ env.XRAYCLOUD_CLIENT_ID }} -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} -Dxray.testPlanKey=${{ env.XRAYCLOUD_TEST_PLAN_KEY }} xray:import-results          
