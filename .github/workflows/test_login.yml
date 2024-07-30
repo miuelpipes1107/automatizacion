@@ -93,8 +93,13 @@ jobs:
         run: |
           ls -la target/surefire-reports/junitreports/
           
-      - name: Install curl
-        run: sudo apt-get update && sudo apt-get install -y curl    
+#      - name: Install curl
+#        run: sudo apt-get update && sudo apt-get install -y curl 
+      - name: Check Environment
+        run: |
+          uname -a
+          which wget
+          wget --version
           
       - name: Authenticate with Xray
         run: |
