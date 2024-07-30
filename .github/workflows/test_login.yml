@@ -91,7 +91,18 @@ jobs:
           
       - name: Listar archivos en el directorio 'targe/'
         run: |
-          ls -la target/surefire-reports/junitreports/    
+          ls -la target/surefire-reports/junitreports/
+          
+      - name: Authenticate with Xray
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X GET "https://xray.cloud.getxray.app/api/v2/authenticate" \
+          -H "Authorization: Basic $(echo -n ${{ secrets.XRAY_CLIENT_ID }}:${{ secrets.XRAY_CLIENT_SECRET }} | base64)")
+          if [ "$RESPONSE" -ne 200 ]; then
+            echo "Authentication failed with status code $RESPONSE"
+            exit 1
+          else
+            echo "Authentication successful"
+          fi    
           
       - name: Push results to Xray Cloud          
         run: mvn -Dxray.clientId=${{ secrets.XRAY_CLIENT_ID }} -Dxray.clientSecret=${{ secrets.XRAY_CLIENT_SECRET }} -Dxray.reportFormat=junit -Dxray.reportFile=target/surefire-reports/junitreports/TEST-ink_testing_source.login.login.xml xray:import-results 
