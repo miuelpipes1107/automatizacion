@@ -12,7 +12,7 @@
     <!-- the artifact version -->
     <version>50</version>
     <!-- type of packaging used for the project -->
-    <packaging>jar</packaging>
+    <packaging>jar</packaging>    
     <!-- project's name -->
     <name>testing_integracion</name>
     
@@ -209,6 +209,7 @@
                     <cloud>true</cloud>
                     <projectKey>AUT</projectKey>
                     <reportFormat>junit</reportFormat>
+                    <version>1.0</version>
                     <reportFile>target/surefire-reports/*.xml</reportFile>
                 </configuration>
             </plugin>                       
