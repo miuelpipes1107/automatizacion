@@ -204,14 +204,26 @@
             <plugin>
                 <groupId>app.getxray</groupId>
                 <artifactId>xray-maven-plugin</artifactId>
-                <version>${internal.xray-maven-plugin.version}</version>
-                <configuration>
-                    <cloud>true</cloud>
-                    <projectKey>AUT</projectKey>
-                    <reportFormat>junit</reportFormat>
-                    <version>1.0</version>
-                    <reportFile>target/surefire-reports/*.xml</reportFile>
-                </configuration>
+                <version>0.7.3</version>
+                <executions>
+                    <execution>
+                        <id>import-results</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>import-results</goal>
+                        </goals>
+                        <configuration>
+                            <cloud>true</cloud>
+                            <clientId>664F2A6FDBDD4E8E86D1C3DC95B360B6</clientId>
+                            <clientSecret>d28b112ded3ca5734d7ea2444c3e93b840b4d6f4a3086f74bb10f032676ba7be</clientSecret>
+                            <projectKey>AUT</projectKey>
+                            <fixVersion>1.0</fixVersion>
+                            <testPlanKey>AUT-100</testPlanKey>
+                            <reportFormat>junit</reportFormat>
+                            <reportFile>target/surefire-reports/*.xml</reportFile>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>                       
         </plugins>
     </build>
