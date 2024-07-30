@@ -8,6 +8,7 @@ package recording_test;
 import ink_testing_source.configuration.browser_manager;
 import ink_testing_source.configuration.configuration_server;
 import ink_testing_source.configuration.element_manager;
+import ink_testing_source.login.login;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Attachment;
 import java.awt.*;
@@ -243,9 +244,10 @@ public class test_listener implements ITestListener, IExecutionListener
     {
       number_of_characters = 80;
       configuration_server.NAME_CASE = iTestResult.getName();
-      CloseableHttpClient httpClient = HttpClients.createDefault();      
-      String name=iTestResult.getInstanceName();
-      jira_xray.getIssueTypeFields(httpClient);      
+//      CloseableHttpClient httpClient = HttpClients.createDefault();      
+//      String name=iTestResult.getInstanceName();
+//      jira_xray.getIssueTypeFields(httpClient);
+//        jira_xray.getTestDetails("AUT-99");
       configuration_server.list_created_cases.add(configuration_server.NAME_CASE);
       
       if (iTestResult.getMethod().getMethodName().length() < number_of_characters)
@@ -319,7 +321,7 @@ public class test_listener implements ITestListener, IExecutionListener
 
     element_manager.debug_log(test_status(iTestResult));
   }
-
+  
   /**
    * Performs actions when a test case is skipped. This method is called by the
    * onTestSkipped() method. It logs the test status.
@@ -359,7 +361,9 @@ public class test_listener implements ITestListener, IExecutionListener
   public static void method_after_class() throws IOException, AWTException
   {
     element_manager.debug_log("###################### Case, entry method method_after_class ###################### ");
-
+    
+//    login.testSteps= login.testExecutionAspect.getTestSteps();
+    
     jira_xray_issue = new jira_xray();
     jira_xray_issue.create_or_update_jira_issue(configuration_server.list_created_cases,"10005","");
     

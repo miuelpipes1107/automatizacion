@@ -87,34 +87,42 @@ jobs:
       
       - name: Listar archivos en el directorio 'aws/'
         run: |
-          ls -la xray/        
-      
-      - name: Create test(case) JSON
-        run: |
-          echo '{
-            "fields": {
-              "summary": "",
-              "issuetype": { "id": "10005" },
-              "components": [
-                { "name": "${{ matrix.Plan }}" },
-                { "name": "${{ matrix.Plan }}" }
-              ],
-              "labels": ["ocultar"],
-              "description": ["github"]
-            }
-          }' > test_execution1.json    
+          ls -la xray/
           
-      - name: "Import results to Xray"
-        uses: mikepenz/xray-action@v3.0.4
-        with:
-          username: ${{ secrets.XRAY_CLIENT_ID }}
-          password: ${{ secrets.XRAY_CLIENT_SECRET }}
-          testFormat: "junit"
-          testPaths: "**/target/surefire-reports/*.xml"
-          testExecKey: ${{ github.event.inputs.testExecKey }}
-          projectKey: ${{ github.event.inputs.projectKey }}
-          testJson: "./test_execution1.json"
-          importParallelism: 10
+      - name: Push results to Xray Cloud
+        continue-on-error: true
+        env:
+          XRAYCLOUD_CLIENT_ID: ${{ secrets.XRAY_CLIENT_ID }}
+          XRAYCLOUD_CLIENT_SECRET: ${{ secrets.XRAY_CLIENT_SECRET }}
+          XRAYCLOUD_TEST_PLAN_KEY: "AUT-100"          
+        run: mvn -Dxray.clientId=${{ env.XRAYCLOUD_CLIENT_ID }} -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} -Dxray.testPlanKey=${{ env.XRAYCLOUD_TEST_PLAN_KEY }} xray:import-results          
+      
+#      - name: Create test(case) JSON
+#        run: |
+#          echo '{
+#            "fields": {
+#              "summary": "",
+#              "issuetype": { "id": "10005" },
+#              "components": [
+#                { "name": "${{ matrix.Plan }}" },
+#                { "name": "${{ matrix.Plan }}" }
+#              ],
+#              "labels": ["ocultar"],
+#              "description": ["github"]
+#            }
+#          }' > test_execution1.json    
+#          
+#      - name: "Import results to Xray"
+#        uses: mikepenz/xray-action@v3.0.4
+#        with:
+#          username: ${{ secrets.XRAY_CLIENT_ID }}
+#          password: ${{ secrets.XRAY_CLIENT_SECRET }}
+#          testFormat: "junit"
+#          testPaths: "**/target/surefire-reports/*.xml"
+#          testExecKey: ${{ github.event.inputs.testExecKey }}
+#          projectKey: ${{ github.event.inputs.projectKey }}
+#          testJson: "./test_execution1.json"
+#          importParallelism: 10
           
 #      - name: Install curl
 #        run: |
@@ -152,3 +160,4 @@ jobs:
 #      - name: Upload Allure results to Allure TestOps
 #        run: |
 #          /__t/allurectl/2.15.4/amd64/allurectl upload ./xray --project-id ${{ secrets.ALLURE_PROJECT_ID }}
+

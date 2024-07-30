@@ -6,6 +6,7 @@
 package ink_testing_source.configuration;
 
 import java.util.List;
+import jira_xray.test_step_logger;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -220,6 +221,104 @@ public class element_manager
   
   public static boolean textfield_set_text(By field, String explanation_element, String text)
   {
+    test_step_logger.logCurrentMethod(explanation_element,"fill the field");
+    int count = 0;
+    double time_cycle = 0;
+
+    WebElement text_field_instance = null;
+    String get_text_elemet = "";
+    while (time_cycle < configuration_server.RETRY_TIMEOUT)
+    {
+      double time_start = 0, time_end = 0;
+      time_start = System.currentTimeMillis();
+
+      try
+      {
+        get_assert_or_message(text_case_entry_to_the_method, false, false, null, false, explanation_element);
+
+        text_field_instance = get_instance_webelement(field, explanation_element);
+        get_assert_or_message(text_success_pass_find_element + explanation_element,
+          false, false, null, false, "");
+
+        text_field_instance.clear();
+        button_click(field, NO_TEXT_BUTTON_CODE);
+        text_field_instance.sendKeys(text);
+        get_assert_or_message(text_success, false, false, null, false, text);
+
+        get_text_elemet = get_value_webelement(text_field_instance, explanation_element);
+        get_assert_or_message(text_get_value_elemet_field + get_text_elemet,
+          false, false, null, false, "");
+
+        if (!text.equals(get_text_elemet))
+        {
+          ++count;
+          time_end = System.currentTimeMillis();
+          time_cycle = time_cycle + (time_end - time_start);
+          get_assert_or_message(text_error_text_doesnt_match + "\"" + text + "\"" + text_with + "\"" + get_text_elemet
+            + "\"" + text_cycle_number + count, false, false, null, false, "");
+          get_assert_or_message(text_error_time_cycle + (time_end - time_start) + text_milliseconds_and_time_accumulated
+            + time_cycle + text_milliseconds, false, false, null, false, "");
+
+        }
+        else
+        {
+          get_assert_or_message(text_success, false, false, null, false, text);
+
+          browser_manager.title_page();
+          return true;
+        }
+      }
+      catch (NoSuchElementException ignored)
+      {
+        ++count;
+        time_end = System.currentTimeMillis();
+        time_cycle = time_cycle + (time_end - time_start);
+        get_assert_or_message(text_error_not_found + text + text_cycle_number + count,
+          false, false, null, false, text_nosuch_element_exception);
+        get_assert_or_message(text_error_time_cycle + (time_end - time_start) + text_milliseconds_and_time_accumulated
+          + time_cycle + text_milliseconds, false, false, null, false, "");
+      }
+      catch (StaleElementReferenceException ignored)
+      {
+        ++count;
+        time_end = System.currentTimeMillis();
+        time_cycle = time_cycle + (time_end - time_start);
+        get_assert_or_message(text_error_element_stale + text + text_cycle_number + count,
+          false, false, null, false, text_stale_element_reference_exception);
+        get_assert_or_message(text_error_time_cycle + (time_end - time_start) + text_milliseconds_and_time_accumulated
+          + time_cycle + text_milliseconds, false, false, null, false, "");
+      }
+      catch (Exception e)
+      {
+        ++count;
+        time_end = System.currentTimeMillis();
+        time_cycle = time_cycle + (time_end - time_start);
+        get_assert_or_message(text_error_element_not_found + text, false, false,
+          null, false, text_cycle_number + count + text_exception);
+        get_assert_or_message(text_error_time_cycle + (time_end - time_start) + text_milliseconds_and_time_accumulated
+          + time_cycle + text_milliseconds, false, false, null, false, "");
+      }
+      sconds_sleep(300);
+      time_cycle = time_cycle + 300;
+    }
+
+    if (time_cycle > configuration_server.RETRY_TIMEOUT)
+    {
+      get_assert_or_message(text_error_element_not_found + text, true, true,
+        text_field_instance, false, "");
+      get_assert_or_message(text_error_time_accumulated + time_cycle + text_milliseconds,
+        false, false, null, false, "");
+      assert_true_string(get_text_elemet, text, explanation_element);
+      browser_manager.title_page();
+      return false;
+    }
+    browser_manager.title_page();
+    return false;
+  }
+  
+  public static boolean textfield_set_text_2(By field, String explanation_element, String text)
+  {
+    test_step_logger.logCurrentMethod(explanation_element,"fill the field");
     int count = 0;
     double time_cycle = 0;
 

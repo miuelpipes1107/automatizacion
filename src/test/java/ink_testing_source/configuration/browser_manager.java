@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
+import jira_xray.test_step_logger;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -41,6 +42,7 @@ public class browser_manager
    */
   public static void open_browser()
   {
+    test_step_logger.logCurrentMethod("","Open browser");
     close_browser();
 
     //// initialize the driver

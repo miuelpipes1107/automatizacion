@@ -10,7 +10,6 @@ import ink_testing_source.configuration.browser_manager;
 import ink_testing_source.configuration.configuration_server;
 import io.qameta.allure.Allure;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -30,7 +29,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.http.client.methods.HttpDelete;
@@ -44,6 +42,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonElement;
+import java.util.Iterator;
 /**
  *
  * @author Aurora
@@ -59,11 +58,15 @@ public class jira_xray
 
   public void create_jira_issue(String summary, String description, String issueTypeId, CloseableHttpClient httpClient) throws IOException
   {
-
     List<String> issue_information = new ArrayList<>();
     browser_manager.id_issue_xray = search_issue_by_summary(summary, httpClient);
     String token_xray = getAuthToken(httpClient);
 //    isTokenValid(httpClient,token_xray);
+
+//	   // Generar el CSV con los pasos del test
+////    List<String> testSteps = test_step_logger.getTestSteps();
+//    String csvFilePath = "xray/steps.csv"; // Cambia esta ruta a donde quieras guardar el CSV
+//    csv_generator.generateCSV(csvFilePath, summary, description, issueTypeId, testSteps);
     if (browser_manager.id_issue_xray == null)
     {
 
@@ -75,13 +78,40 @@ public class jira_xray
       httpPost.setHeader("Authorization", authHeader);
       httpPost.setHeader("Content-Type", "application/json");
 
+      // Obtener los pasos del test
+      JSONArray stepsArray = new JSONArray();
+      for (int i = 0; i < test_step_logger.list_testSteps.size(); i++)
+      {        
+        for (int j = 1; j < test_step_logger.list_testSteps.get(i).size(); j++)
+        {
+          if (test_step_logger.list_testSteps.get(i).get(0).get(0).equals(summary))
+          {
+            JSONObject stepObject = new JSONObject();
+            stepObject.put("step", test_step_logger.list_testSteps.get(i).get(j).get(0).replace("_", " "));
+            stepObject.put("data", test_step_logger.list_testSteps.get(i).get(j).get(1));
+            stepObject.put("result", test_step_logger.list_testSteps.get(i).get(j).get(2));
+            stepsArray.put(stepObject);
+          }
+        }
+        test_step_logger.list_testSteps.remove(i);
+        break;
+      }
+
       JSONObject issueDetails = new JSONObject();
-      JSONObject fields = new JSONObject();      
-      fields.put("summary", summary);      
-      fields.put("description", "");
-      fields.put("issuetype", new JSONObject().put("id", issueTypeId));      
+      JSONObject fields = new JSONObject();
+      fields.put("summary", summary);
+      String step = "";
+      for (int i = 0; i < stepsArray.length(); i++)
+      {
+        step += i + 1 + "_Step :" + stepsArray.getJSONObject(i).getString("step")
+          + "-Data: " + stepsArray.getJSONObject(i).getString("data")
+          + "-Result: " + stepsArray.getJSONObject(i).getString("result") + "\n";
+      }
+      fields.put("description", step);
+      fields.put("issuetype", new JSONObject().put("id", issueTypeId));
       fields.put("project", new JSONObject().put("key", "AUT"));
       issueDetails.put("fields", fields);
+      issueDetails.put("definicion", stepsArray);
 
       StringEntity entity = new StringEntity(issueDetails.toString());
       httpPost.setEntity(entity);
@@ -93,9 +123,8 @@ public class jira_xray
         System.out.println("Response Body: " + responseString);
         JSONObject responseString_objet = new JSONObject(responseString);
         browser_manager.id_issue_xray = responseString_objet.getString("key");
-        
+
 //        add_test_to_execution(httpClient,"AUT-125",browser_manager.id_issue_xray);
-        
 //        if (responseString.startsWith("["))
 //        {
 //          // Si la respuesta es un JSONArray
@@ -117,13 +146,12 @@ public class jira_xray
 //        {
 //          System.out.println("Unexpected response format");
 //        }
-        
         if (browser_manager.id_issue_xray != null)
         {
           issue_information.add(browser_manager.id_issue_xray);
           issue_information.add(summary);
           configuration_server.matrix_issues.add(issue_information);
-          add_test_to_execution(httpClient,"AUT-3",browser_manager.id_issue_xray,token_xray);
+          add_test_to_execution(httpClient, "AUT-3", browser_manager.id_issue_xray, token_xray);
 
           for (int i = 0; i < configuration_server.matrix_issues.size(); i++)
           {
@@ -615,6 +643,91 @@ public class jira_xray
         }
         String jsonResponse = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
         return jsonResponse.replace("\"", ""); // Token is returned as a plain string
+      }
+    }
+  }
+  
+  public static void getIssueFields(String issueKey) throws IOException
+  {
+    try (CloseableHttpClient httpClient = HttpClients.createDefault())
+    {
+      HttpGet httpGet = new HttpGet(configuration_server.JIRA_URL + configuration_server.JIRA_API_ENDPOINT + "/"+issueKey);
+
+      String auth = configuration_server.JIRA_USER_EMAIL + ":" + configuration_server.JIRA_API_TOKEN;
+      byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes(StandardCharsets.ISO_8859_1));
+      String authHeader = "Basic " + new String(encodedAuth);
+      httpGet.setHeader("Authorization", authHeader);
+      httpGet.setHeader("Content-Type", "application/json");
+
+      try (CloseableHttpResponse response = httpClient.execute(httpGet))
+      {
+        String responseString = EntityUtils.toString(response.getEntity());
+        System.out.println("Response Code: " + response.getStatusLine().getStatusCode());
+        System.out.println("Response Body: " + responseString);
+
+        JSONObject issue = new JSONObject(responseString);
+        JSONObject fields = issue.getJSONObject("fields");
+
+        // Iterar sobre los campos y listar sus nombres e IDs
+        Iterator<String> keys = fields.keys();
+        while (keys.hasNext())
+        {
+          String key = keys.next();
+          Object value = fields.get(key);
+          System.out.println("Field ID: " + key + ", Field Value: " + value);
+        }
+
+//                // Aquí puedes procesar los campos como desees
+//                System.out.println("Summary: " + fields.getString("summary"));
+//                System.out.println("Description: " + fields.getString("description"));
+//
+//                // Si tienes un campo personalizado específico, puedes acceder a él así:
+//                // System.out.println("Custom Field: " + fields.getString("customfield_12345"));
+      }
+    }
+  }
+  
+  public static void getTestDetails(String testKey) throws IOException
+  {
+    try (CloseableHttpClient httpClient = HttpClients.createDefault())
+    {
+      HttpGet httpGet = new HttpGet(configuration_server.JIRA_URL + "/rest/raven/1.0/api/test/" + testKey+"/steps");
+
+      String auth = configuration_server.JIRA_USER_EMAIL + ":" + configuration_server.JIRA_API_TOKEN;
+      byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes(StandardCharsets.ISO_8859_1));
+      String authHeader = "Basic " + new String(encodedAuth);
+      httpGet.setHeader("Authorization", authHeader);
+      httpGet.setHeader("Content-Type", "application/json");
+
+      try (CloseableHttpResponse response = httpClient.execute(httpGet))
+      {
+        String responseString = EntityUtils.toString(response.getEntity());
+        System.out.println("Response Code: " + response.getStatusLine().getStatusCode());
+        System.out.println("Response Body: " + responseString);
+
+        JSONObject testDetails = new JSONObject(responseString);
+
+        // Obtener y mostrar los pasos del test
+        if (testDetails.has("steps"))
+        {
+          JSONArray steps = testDetails.getJSONArray("steps");
+          for (int i = 0; i < steps.length(); i++)
+          {
+            JSONObject step = steps.getJSONObject(i);
+            String stepDescription = step.getString("step");
+            String stepData = step.getString("data");
+            String stepResult = step.getString("result");
+
+            System.out.println("Step " + (i + 1) + ":");
+            System.out.println("  Description: " + stepDescription);
+            System.out.println("  Data: " + stepData);
+            System.out.println("  Result: " + stepResult);
+          }
+        }
+        else
+        {
+          System.out.println("No steps found for the test.");
+        }
       }
     }
   }

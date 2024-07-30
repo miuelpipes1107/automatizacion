@@ -35,6 +35,7 @@
         <webdrivermanager.version>5.3.2</webdrivermanager.version>
         <surefire.version>3.1.0</surefire.version>
         <dotenv.version>3.0.0</dotenv.version>
+        <internal.xray-maven-plugin.version>0.7.5</internal.xray-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -145,7 +146,35 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.12.3</version>
-        </dependency>          
+        </dependency>
+        <!-- Dependencia de Spring AOP -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>5.3.8</version>
+        </dependency>
+
+        <!-- Dependencia de AspectJ -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.9.19</version>
+        </dependency>
+        
+        <!-- Dependencia de Spring Context -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>5.3.8</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>app.getxray</groupId>
+            <artifactId>xray-maven-plugin</artifactId>
+            <version>${internal.xray-maven-plugin.version}</version>
+            <scope>test</scope>
+        </dependency>                
+        
     </dependencies>
 
     <!-- Build segment for executing local tests. -->
@@ -161,16 +190,29 @@
                     <testFailureIgnore>true</testFailureIgnore>
                     <argLine>
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
-                    </argLine>
+                    </argLine>                                      
                 </configuration>
                 <dependencies>
                     <dependency>
                         <groupId>org.aspectj</groupId>
                         <artifactId>aspectjweaver</artifactId>
                         <version>${aspectj.version}</version>
-                    </dependency>
-                </dependencies>
+                    </dependency>                    
+                </dependencies>                
             </plugin>
+            <!-- Xray Maven Plugin -->
+            <plugin>
+                <groupId>app.getxray</groupId>
+                <artifactId>xray-maven-plugin</artifactId>
+                <version>${internal.xray-maven-plugin.version}</version>
+                <configuration>
+                    <cloud>true</cloud>
+                    <projectKey>AUT</projectKey>
+                    <version>${project.version}</version>
+                    <reportFormat>junit</reportFormat>
+                    <reportFile>target/surefire-reports/*.xml</reportFile>
+                </configuration>
+            </plugin>                       
         </plugins>
     </build>
 </project>
