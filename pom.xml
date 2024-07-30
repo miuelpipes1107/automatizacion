@@ -219,7 +219,6 @@
                             <projectKey>AUT</projectKey>
                             <fixVersion>1.0</fixVersion>
                             <testPlanKey>AUT-100</testPlanKey>
-                            <reportFormat>junit</reportFormat>
                         </configuration>
                     </execution>
                 </executions>
